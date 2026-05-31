@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<title>BPCL Standard Drawings</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+:root{
+  --blue:#1E96F7;--blue-dk:#0056b3;--yellow:#FEDC21;
+  --dark:#0f1623;--page:#F1F5F9;
+  --t1:rgb(30,41,59);--t2:rgb(71,85,105);--tm:rgb(100,116,139);
+  --border:rgb(226,232,240);--border-i:rgb(203,213,225);
+  --green:#22C55E;--amber:#F59E0B;--red:#EF4444;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:"IBM Plex Sans",sans-serif;
+  background:var(--page);color:var(--t1);
+  height:100vh;height:100dvh;
+  overflow:hidden;display:flex;flex-direction:column;
+  -webkit-font-smoothing:antialiased;
+}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+
+/* TOPBAR */
+#topbar{
+  background:var(--dark);flex-shrink:0;
+  padding:12px 16px;
+  display:flex;align-items:center;gap:12px;
+  padding-top:max(12px, calc(12px + env(safe-area-inset-top)));
+}
+.logo{width:36px;height:36px;border-radius:50%;background:#1565C0;position:relative;flex-shrink:0}
+.logo::after{content:'';width:14px;height:14px;border-radius:50%;background:var(--yellow);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+#topbar-title{font-size:clamp(14px,4vw,16px);font-weight:700;color:#fff;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#topbar-sub{font-size:10px;color:rgba(255,255,255,.45)}
+#btn-back{width:40px;height:40px;border:none;background:rgba(255,255,255,.1);border-radius:10px;display:none;align-items:center;justify-content:center;cursor:pointer;color:#fff;flex-shrink:0}
+#btn-back .material-icons{font-size:20px}
+#btn-search{width:40px;height:40px;border:none;background:rgba(255,255,255,.1);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;flex-shrink:0}
+#btn-search .material-icons{font-size:20px}
+
+/* SEARCH BAR */
+#search-bar{background:var(--dark);padding:0 16px 12px;display:none;flex-shrink:0}
+#search-bar.open{display:block}
+.sw{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border-radius:10px;padding:9px 12px}
+.sw .material-icons{color:rgba(255,255,255,.5);font-size:18px;flex-shrink:0}
+#q{border:none;background:transparent;outline:none;font-size:14px;font-family:"IBM Plex Sans",sans-serif;color:#fff;flex:1;min-width:0}
+#q::placeholder{color:rgba(255,255,255,.4)}
+#btn-clear{border:none;background:none;color:rgba(255,255,255,.5);cursor:pointer;padding:0;display:none;flex-shrink:0}
+#btn-clear .material-icons{font-size:17px;vertical-align:middle}
+
+/* FILTER BAR */
+#filter-bar{background:#fff;border-bottom:1px solid var(--border);padding:9px 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex-shrink:0}
+#filter-bar::-webkit-scrollbar{display:none}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;border:1.5px solid var(--border);background:#fff;color:var(--t2);cursor:pointer;white-space:nowrap;transition:all .15s}
+.chip.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.chip .material-icons{font-size:14px}
+
+/* BREADCRUMB */
+#breadcrumb{padding:10px 16px 2px;font-size:12px;color:var(--tm);display:none;align-items:center;gap:4px;flex-shrink:0}
+#breadcrumb.show{display:flex}
+#breadcrumb span{cursor:pointer}
+#breadcrumb span:hover{color:var(--blue)}
+#breadcrumb b{color:var(--t1);font-weight:500}
+
+/* MAIN */
+#main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+
+/* CONTACT CARD */
+#contact-card{
+  margin:12px 16px 0;
+  background:linear-gradient(135deg,var(--dark),#1a2744);
+  border-radius:12px;padding:14px 16px;
+  display:flex;align-items:center;gap:12px;
+  border:1px solid rgba(30,150,247,.2);
+}
+.contact-avatar{
+  width:44px;height:44px;border-radius:50%;background:var(--blue);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;color:#fff;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.15);
+}
+.contact-info{flex:1;min-width:0}
+.contact-name{font-size:14px;font-weight:700;color:#fff}
+.contact-role{font-size:11px;color:rgba(255,255,255,.55);margin-top:1px}
+.contact-phone{
+  display:flex;align-items:center;gap:5px;
+  font-size:12px;font-weight:600;color:var(--blue);
+  text-decoration:none;
+}
+.contact-phone .material-icons{font-size:14px}
+.contact-phone:hover{color:#60bdff}
+
+/* SEC TITLE */
+.sec-title{padding:12px 16px 8px;font-size:13px;font-weight:600;color:var(--t1)}
+
+/* CATEGORY GRID */
+#cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 16px 16px}
+@media(min-width:480px){#cat-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:768px){#cat-grid{grid-template-columns:repeat(4,1fr);padding:0 20px 20px}}
+
+.cat-card{
+  background:#fff;border:1px solid var(--border);border-radius:12px;
+  padding:14px 12px;cursor:pointer;
+  display:flex;flex-direction:column;
+  transition:box-shadow .15s,transform .15s;
+  -webkit-user-select:none;user-select:none;
+}
+.cat-card:active{transform:scale(.97)}
+@media(hover:hover){.cat-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08);transform:translateY(-1px)}}
+.cat-ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.cat-ico .material-icons{font-size:22px;color:#fff}
+.cat-name{font-size:clamp(12px,3.5vw,13.5px);font-weight:700;color:var(--t1);margin-bottom:2px}
+.cat-cnt{font-size:11px;color:var(--blue);font-weight:600}
+.cat-desc{font-size:10px;color:var(--tm);margin-top:4px;line-height:1.4;display:none}
+@media(min-width:480px){.cat-desc{display:block}}
+
+/* FILE LIST */
+#file-list{display:none;padding:0 16px 32px}
+@media(min-width:768px){#file-list{padding:0 20px 24px}}
+
+.subcat-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--tm);padding:12px 0 6px;margin-top:4px;border-bottom:1px solid var(--border);margin-bottom:8px}
+
+.file-item{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px}
+.fext{width:36px;height:36px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;letter-spacing:.5px}
+.finfo{flex:1;min-width:0}
+.ftitle{font-size:clamp(12px,3.5vw,13px);font-weight:600;color:var(--t1);line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fdesc{font-size:11px;color:var(--t2);margin-top:3px;line-height:1.4}
+.fbtns{display:flex;gap:6px;margin-top:8px}
+.fbtns button,.fbtns a{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:6px 12px;border-radius:7px;font-size:11.5px;font-weight:600;
+  cursor:pointer;font-family:"IBM Plex Sans",sans-serif;
+  min-height:36px;text-decoration:none;transition:background .15s;border:none;
+}
+.fbtn-view{background:rgba(30,150,247,.1);color:var(--blue);flex:1;justify-content:center}
+.fbtn-view:hover{background:rgba(30,150,247,.18)}
+.fbtn-view .material-icons{font-size:14px}
+.fbtn-dl{background:#F8FAFC;color:var(--t2);border:1px solid var(--border) !important}
+.fbtn-dl:hover{background:var(--border)}
+.fbtn-dl .material-icons{font-size:14px}
+
+/* SEARCH RESULTS */
+#search-results{display:none;padding:0 16px 32px}
+@media(min-width:768px){#search-results{padding:0 20px 24px}}
+.s-count{font-size:12px;color:var(--tm);padding:10px 0}
+.no-results{text-align:center;padding:48px 20px;color:var(--tm)}
+.no-results .material-icons{font-size:40px;display:block;margin-bottom:8px}
+
+/* TOAST */
+#toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:#1e293b;color:#F8FAFC;
+  border-radius:12px;padding:12px 16px;
+  display:none;align-items:center;gap:10px;
+  box-shadow:0 8px 30px rgba(0,0,0,.35);
+  z-index:500;max-width:92vw;min-width:280px;
+  border:1px solid rgba(255,255,255,.1);
+}
+#toast.show{display:flex;animation:su .25s ease}
+@keyframes su{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+#toast-title{flex:1;font-size:12.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tbtn{display:flex;align-items:center;gap:4px;border:none;border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:"IBM Plex Sans",sans-serif;white-space:nowrap;text-decoration:none}
+#toast-open{background:var(--blue);color:#fff}
+#toast-dl{background:rgba(255,255,255,.12);color:#F8FAFC}
+#toast-x{background:none;color:rgba(255,255,255,.4);padding:4px;min-height:0}
+#toast-x .material-icons{font-size:18px}
+
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <button id="btn-back" onclick="goBack()"><span class="material-icons">arrow_back</span></button>
+  <div class="logo"></div>
+  <div style="flex:1;min-width:0">
+    <div id="topbar-title">Standard Drawings</div>
+    <div id="topbar-sub">BPCL PMC Reference Library</div>
+  </div>
+  <button id="btn-search" onclick="toggleSearch()"><span class="material-icons">search</span></button>
+</div>
+
+<div id="search-bar">
+  <div class="sw">
+    <span class="material-icons">search</span>
+    <input id="q" type="search" placeholder="Search drawings..." oninput="onSearch()" autocomplete="off"/>
+    <button id="btn-clear" onclick="clearQ()"><span class="material-icons">close</span></button>
+  </div>
+</div>
+
+<div id="filter-bar">
+  <div class="chip active" id="fc-all"       onclick="setF('all',this)"><span class="material-icons">layers</span>All</div>
+  <div class="chip"        id="fc-civil"     onclick="setF('civil',this)"><span class="material-icons">construction</span>Civil</div>
+  <div class="chip"        id="fc-mech"      onclick="setF('mechanical',this)"><span class="material-icons">engineering</span>Mechanical</div>
+  <div class="chip"        id="fc-elec"      onclick="setF('electrical',this)"><span class="material-icons">electric_bolt</span>Electrical</div>
+  <div class="chip"        id="fc-nrvi"      onclick="setF('nrvi',this)"><span class="material-icons">campaign</span>NRVI</div>
+  <div class="chip"        id="fc-hme"       onclick="setF('hme',this)"><span class="material-icons">view_in_ar</span>HME</div>
+  <div class="chip"        id="fc-monolith"  onclick="setF('monolith',this)"><span class="material-icons">vertical_align_top</span>Monolith</div>
+</div>
+
+<div id="breadcrumb">
+  <span onclick="goBack()">All Categories</span>
+  <span class="material-icons" style="font-size:14px;color:var(--border-i)">chevron_right</span>
+  <b id="bc-label">-</b>
+</div>
+
+<div id="main">
+
+  <div id="cat-area">
+    <!-- Contact Card -->
+    <div id="contact-card">
+      <div class="contact-avatar">BK</div>
+      <div class="contact-info">
+        <div class="contact-name">Bhupesh Kumar Bajiya</div>
+        <div class="contact-role">TEM, Belgaum Territory &nbsp;|&nbsp; BPCL</div>
+      </div>
+      <a class="contact-phone" href="tel:8302176151">
+        <span class="material-icons">call</span> 830-217-6151
+      </a>
+    </div>
+
+    <div class="sec-title">Standard Drawing Categories</div>
+    <div id="cat-grid">
+      <div class="cat-card" onclick="openCat('civil')">
+        <div class="cat-ico" style="background:linear-gradient(135deg,#F59E0B,#D97706)"><span class="material-icons">construction</span></div>
+        <div class="cat-name">Civil Works</div>
+        <div class="cat-cnt" id="cc-civil">-</div>
+        <div class="cat-desc">Compound wall, pump island, manhole, septic tank, soak pit, kerb stone, NH chevron marking</div>
+      </div>
+      <div class="cat-card" onclick="openCat('salesbldg')">
+        <div class="cat-ico" style="background:linear-gradient(135deg,#10B981,#059669)"><span class="material-icons">store</span></div>
+        <div class="cat-name">Sales Building</div>
+        <div class="cat-cnt" id="cc-salesbldg">-</div>
+        <div class="cat-desc">B0 / B0/2 / B1 / B2 types, Half B0 (Oct 2025), B-0 type sheets</div>
+      </div>
+      <div class="cat-card" onclick="openCat('canopy')">
+        <div class="cat-ico" style="background:linear-gradient(135deg,#3B82F6,#1d4ed8)"><span class="material-icons">roofing</span></div>
+        <div class="cat-name">Canopy</div>
+        <div class="cat-cnt" id="cc-canopy">-</div>
+        <div class="cat-desc">Column foundation, indicative structure with full BOM</div>
+      </div>
+      <div class="cat-card" onclick="openCat('mechanical')">
+        <div class="cat-ico" style="background:linear-gradient(135deg,#6366F1,#4338CA)"><span class="material-icons">engineering</span></div>
+        <div class="cat-name">Mechanical</div>
+        <div class="cat-cnt" id="cc-mechanical">-</div>
+        <div class="cat-desc">UG tanks 10/15/20/45/70 KL, earthen pit, masonry pit, HD arrangement, tank fab drawings</div>
+      </div>
+      <div class="cat-card" onclick="openCat('electrical')">
+        <div class="cat-ico" style="background:linear-gradient(135deg,#EF4444,#dc2626)"><span class="material-icons">electric_bolt</span></div>
+        <div class="cat-name">Electrical</div>
+        <div class="cat-cnt" id="cc-electrical">-</div>
+        <div class="cat-desc">16-point earthing layout, IS 3043:2018 earth pit, tank lorry earthing, panels</div>
+      </div>
+      <div class="cat-card" onclick="openCat('culvert')">
+        <div class="cat-ico" style="background:linear-gradient(135deg,#14B8A6,#0d9488)"><span class="material-icons">water</span></div>
+        <div class="cat-name">Culvert</div>
+        <div class="cat-cnt" id="cc-culvert">-</div>
+        <div class="cat-desc">RCC culvert M20, iron grating, MS grating variants</div>
+      </div>
+      <div class="cat-card" onclick="openCat('hme')">
+        <div class="cat-ico" style="background:linear-gradient(135deg,#F97316,#ea580c)"><span class="material-icons">view_in_ar</span></div>
+        <div class="cat-name">HME Structure</div>
+        <div class="cat-cnt" id="cc-hme">-</div>
+        <div class="cat-desc">17M and 22M Inland and Coastal HMS, design calculations, foundation bolts, frame</div>
+      </div>
+      <div class="cat-card" onclick="openCat('monolith')">
+        <div class="cat-ico" style="background:linear-gradient(135deg,#8B5CF6,#6d28d9)"><span class="material-icons">vertical_align_top</span></div>
+        <div class="cat-name">Monolith</div>
+        <div class="cat-cnt" id="cc-monolith">-</div>
+        <div class="cat-desc">Highway monolith 28 sheets, Urban monolith 27 sheets, foundation</div>
+      </div>
+      <div class="cat-card" onclick="openCat('nrvi')">
+        <div class="cat-ico" style="background:linear-gradient(135deg,#EC4899,#be185d)"><span class="material-icons">campaign</span></div>
+        <div class="cat-name">NRVI / Branding</div>
+        <div class="cat-cnt" id="cc-nrvi">-</div>
+        <div class="cat-desc">Canopy fascia, cladding, spreader, facility, MPD, poster unit, LDU, QOC, emblem</div>
+      </div>
+      <div class="cat-card" onclick="openCat('pme')">
+        <div class="cat-ico" style="background:linear-gradient(135deg,#0EA5E9,#0284c7)"><span class="material-icons">flag</span></div>
+        <div class="cat-name">PME Pole Emblem</div>
+        <div class="cat-cnt" id="cc-pme">-</div>
+        <div class="cat-desc">Assembly sheets, foundation, component sheets P07-P13</div>
+      </div>
+      <div class="cat-card" onclick="openCat('approved')">
+        <div class="cat-ico" style="background:linear-gradient(135deg,#22C55E,#16a34a)"><span class="material-icons">verified</span></div>
+        <div class="cat-name">Approved Makes</div>
+        <div class="cat-cnt" id="cc-approved">-</div>
+        <div class="cat-desc">Annexure D9 - 49 approved material brands for SOR</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="file-list"></div>
+
+  <div id="search-results">
+    <div class="s-count" id="s-count"></div>
+    <div id="s-grid"></div>
+    <div id="no-results" class="no-results hidden">
+      <span class="material-icons">search_off</span>
+      No drawings found
+    </div>
+  </div>
+
+</div>
+
+<div id="toast">
+  <span id="toast-title">Drawing</span>
+  <button id="toast-open" class="tbtn" onclick="toastOpen()"><span class="material-icons" style="font-size:15px">open_in_new</span>Open</button>
+  <a id="toast-dl" class="tbtn" href="#" download><span class="material-icons" style="font-size:15px">download</span></a>
+  <button id="toast-x" class="tbtn" onclick="closeToast()"><span class="material-icons">close</span></button>
+</div>
+
+<script>
+var D = {
+  civil:{l:'Civil Works',i:'construction',c:'linear-gradient(135deg,#F59E0B,#D97706)',s:{
+    'General':[
+      {f:'Civil/BRICK ON EDGE TANK FARM.pdf',d:'Brick on edge tank farm construction detail'},
+      {f:'Civil/CHEVRON MARKING NH SITES -IRC 35.pdf',d:'IRC-35 NH chevron marks for deceleration (32.88m) and acceleration (55.3m) lanes. 600mm white chevron, 6m spacing'},
+      {f:'Civil/COMPOUND WALL.pdf',d:'Brick masonry compound wall - 230mm thick, 9x9 inch pillars, C.M. 1:4 plaster, max 8ft span'},
+      {f:'Civil/DOOR -WINDOWS AL SECTIONS.pdf',d:'Aluminium door and window sections - AL profiling 101x45x2.10mm, off-white powder coating'},
+      {f:'Civil/FENCING - BARBED WIRE AND CHAIN LINK.pdf',d:'4.5 to 6ft boundary wall with barbed wire and chain link fencing'},
+      {f:'Civil/FENCING SHEET.pdf',d:'Fencing sheet standard for BPCL RO boundary'},
+      {f:'Civil/HOARDINGS.pdf',d:'BPCL standard hoarding structure detail'},
+      {f:'Civil/HUME PIPE LAYING.pdf',d:'Hume pipe laying standard - IS code 456 SP-16'},
+      {f:'Civil/KERB STONE TYPICAL -PAVER WORKS.pdf',d:'Kerb stone profile for paver driveway edge finishing'},
+      {f:'Civil/LEVEL EXPLAINED-TYPICAL URBAN RO OTHER THAN NH.pdf',d:'Typical urban RO level drawing - tank slab 127mm below FDL, pedestal 200mm above FDL, building floor 300mm above FDL'},
+      {f:'Civil/MANHOLE CHAMBERS.pdf',d:'MS manhole frame and cover - sizes 450x450, 600x600, 900x900mm. ISA 50x50x6 frame. BPCL Drg BP/RET/MH/1'},
+      {f:'Civil/PEDESTAL GUARD.pdf',d:'Dispenser pedestal guard detail'},
+      {f:'Civil/PUMP ISLAND WITH POLYCRETE NOSING.pdf',d:'Pump island with polycrete nosing - standard RO layout'},
+      {f:'Civil/RAIN WATER HARVESTING FOR NORMAL SOIL.pdf',d:'Rain water harvesting pit for normal soil'},
+      {f:'Civil/SEPTIC TANK.pdf',d:'Septic tank with chloring chamber - capacity table 10 to 100 users'},
+      {f:'Civil/SOAK PIT.pdf',d:'Soak pit 2500x3000mm - honeycomb brick wall, brick ballast, 150mm SW pipe, RCC slab cover'},
+      {f:'Civil/SOR Brick Works.pdf',d:'Schedule of Rates - brick works reference (scanned)'}
+    ]
+  }},
+  salesbldg:{l:'Sales Building',i:'store',c:'linear-gradient(135deg,#10B981,#059669)',s:{
+    'Building Types':[
+      {f:'Civil/Sales Building/SALES BUILDINGS  -STANDARDS.pdf',d:'4 types: B0 normal RO, B0/2 rural or space constraint, B1 NH with toilets, B2 NH high potential. Signed 2022'},
+      {f:'Civil/Sales Building/Standard Sales Building Half-B0 (Oct 2025).pdf',d:'Half B0 building - Sales, Manager, DSM Change, Lube, Toilets rooms. Floor: Somany or Kajaria or Johnson tiles 600x600mm. Oct 2025'},
+      {f:'Civil/Sales Building/Sales Building Layout.pdf',d:'Sales building layout variants - B0, B0/2, B1, B2. Foundation per site condition'}
+    ],
+    'B-0 Type Drawings':[
+      {f:'Civil/Sales Building/B-0 Type/Sales Building B-0 Type - Sheet 1.pdf',d:'Sales building B-0 type Sheet 1'},
+      {f:'Civil/Sales Building/B-0 Type/Sales Building B-0 Type - Sheet 2.pdf',d:'Sales building B-0 type Sheet 2'},
+      {f:'Civil/Sales Building/B-0 Type/Sales Building B-0 Type - Sheet 3.pdf',d:'Sales building B-0 type Sheet 3'},
+      {f:'Civil/Sales Building/B-0 Type/Sales Building B-0 Type - Sheet 4.pdf',d:'Sales building B-0 type Sheet 4'}
+    ]
+  }},
+  canopy:{l:'Canopy',i:'roofing',c:'linear-gradient(135deg,#3B82F6,#1d4ed8)',s:{
+    'Canopy Structure':[
+      {f:'Canopy/CANOPY COLUMN FOUNDATION INDICATIVE.pdf',d:'Canopy footing 650x650x2000mm deep - 8x16mm bars, 8 rings at 150mm c/c, 25mm dia x 1000mm anchor bolts 8 nos, M20 RCC'},
+      {f:'Canopy/CANOPY INDICATIVE DRAWING.pdf',d:'Canopy structural BOM - Column 400x200x6mm (6.5m x 1.2m, 56.52 kg/m), base plate 20mm 650x550mm, total 1469kg per column'}
+    ]
+  }},
+  mechanical:{l:'Mechanical',i:'engineering',c:'linear-gradient(135deg,#6366F1,#4338CA)',s:{
+    '10 KL Underground Tank':[
+      {f:'Mechanical/Tank Fab Drawing_10-KL.pdf',d:'10 KL cylindrical UG tank fabrication drawing'},
+      {f:'Mechanical/INSTALLATION OF 10 KL CYLINDRICAL UNDERGROUND TANK IN EARTHEN PIT.pdf',d:'10 KL in earthen pit - hydraulic test 0.36 kg/cm2, dip rod 3220mm'},
+      {f:'Mechanical/INSTALLATION OF 10 KL CYLINDRICAL UNDERGROUND TANK IN MASONRY PIT.pdf',d:'10 KL in masonry pit - CM 1:3 plaster, soft earth backfill simultaneously'},
+      {f:'Mechanical/INSTALLATION OF 10 KL TANK IN EARTH PIT WITH HOLDING DOWN ARRANGEMENT.pdf',d:'10 KL with anti-buoyancy holding down arrangement'},
+      {f:'Mechanical/INSTALLATION OF 10 KL UG TANK IN MASONARY PIT  WITH RCC SLAB ON TOP.pdf',d:'10 KL masonry pit with RCC slab on top - note: vent and suction before slab pour'}
+    ],
+    '15 KL Underground Tank':[
+      {f:'Mechanical/Tank Fab Drawing_15-KL.pdf',d:'15 KL cylindrical UG tank fabrication drawing'},
+      {f:'Mechanical/INSTALLATION OF 15KL CYLINDRICAL UNDERGROUND TANK IN EARTHEN PIT.pdf',d:'15 KL in earthen pit - hydraulic test 0.36 kg/cm2'},
+      {f:'Mechanical/INSTALLATION OF 15 KL CYLINDRICAL UNDERGROUND TANK IN MASONRY PIT.pdf',d:'15 KL in masonry pit'},
+      {f:'Mechanical/INSTALLATION OF 15 KL TANK IN EARTH PIT WITH HD ARRANGEMENT.pdf',d:'15 KL earth pit with holding down arrangement'},
+      {f:'Mechanical/INSTALLATION OF 15 KL TANK IN MASONRY PIT WITH HD ARRANGEMENT.pdf',d:'15 KL masonry pit with HD arrangement'},
+      {f:'Mechanical/INSTALLATION OF 15 KL TANK IN MASONRY PIT WITH RCC SLAB ON TOP.pdf',d:'15 KL masonry pit with RCC slab on top'},
+      {f:'Mechanical/INSTALLATION OF 15 KL TANK IN MASONRY PIT WITH SLEEPER BEAM ON TOP.pdf',d:'15 KL with sleeper beam on top'}
+    ],
+    '20 KL Underground Tank':[
+      {f:'Mechanical/Tank Fab Drawing_20-KL.pdf',d:'20 KL cylindrical UG tank fabrication drawing'},
+      {f:'Mechanical/INSTALLATION OF 20 KL TANK IN EARTH PIT.pdf',d:'20 KL in earthen pit - standard installation'},
+      {f:'Mechanical/INSTALLATION OF 20 KL CYLINDRICAL UNDERGROUND TANK IN MASONRY PIT.pdf',d:'20 KL in masonry pit'},
+      {f:'Mechanical/INSTALLATION OF 20 KL TANK IN EARTH PIT WITH HD ARRANGEMENT.pdf',d:'20 KL earth pit with HD arrangement'},
+      {f:'Mechanical/INSTALLATION OF 20 KL TANK IN MASONRY PIT WITH HD ARRANGEMENT.pdf',d:'20 KL masonry pit with HD arrangement'},
+      {f:'Mechanical/INSTALLATION OF 20 KL TANK IN MASONRY PIT WITH RCC SLAB ON TOP.pdf',d:'20 KL masonry pit with RCC slab'},
+      {f:'Mechanical/INSTALLATION OF 20 KL TANK IN MASONRY PIT WITH RCC SLEEPER BEAM ON TOP.pdf',d:'20 KL with RCC sleeper beam'}
+    ],
+    '45 KL Underground Tank':[
+      {f:'Mechanical/Tank Fab Drawing_45-KL.pdf',d:'45 KL cylindrical UG tank fabrication drawing'},
+      {f:'Mechanical/INSTALLATION OF 45 KL CYLINDRICAL UNDERGROUND TANK IN EARTHEN PIT.pdf',d:'45 KL in earthen pit'},
+      {f:'Mechanical/INSTALLATION OF 45 KL TANK IN EARTH PIT WITH HD ARRANGEMENT.pdf',d:'45 KL earth pit with HD arrangement'},
+      {f:'Mechanical/INSTALLATION OF 45 KL UG TANK IN MASONARY PIT  WITH HOLDING DOWN ARRANGEMENT.pdf',d:'45 KL masonry pit with HD - 150mm BM wall CM 1:3, PCC 1:3:6, 10mm plaster'},
+      {f:'Mechanical/INSTALLATION OF 45 KL UG TANK IN MASONARY PIT  WITH R.C.C. SLAB ON TOP.pdf',d:'45 KL RCC slab - 20mm at 150mm c/c main bars, 700x700mm manhole. Vent and suction before slab'}
+    ],
+    '70 KL Underground Tank':[
+      {f:'Mechanical/Tank Fab Drawing_70-KL.pdf',d:'70 KL cylindrical UG tank fabrication drawing'}
+    ],
+    'Other':[
+      {f:'Mechanical/LOCKING ARRANGEMENTS FOR DIP AND FILL CAP.pdf',d:'Locking arrangement for tank dip rod and fill cap'},
+      {f:'Mechanical/Tank Installation Details - Complete Set.pdf',d:'Complete scanned set - 36 pages covering all tank sizes 10/15/20/45 KL, all pit types and HD arrangements'}
+    ]
+  }},
+  electrical:{l:'Electrical',i:'electric_bolt',c:'linear-gradient(135deg,#EF4444,#dc2626)',s:{
+    'Earthing':[
+      {f:'Electrical/EARTHING LAYOUT TYPICAL RO.pdf',d:'16-point RO earthing layout - E1/E2 panel, E6/E7 neutral, E8/E9 UPS/MPD, E10-E12 tanks, E13-E16 DG. Cu plate and GI pipe types'},
+      {f:'Electrical/EARTH PIT DRAWING IS 3043 2018.pdf',d:'IS 3043:2018 - pipe electrode and plate electrode earth pit. GI and Cu variants'},
+      {f:'Electrical/EARTHING SYSTEM FOR TANK LORRY.pdf',d:'Tank lorry static discharge earthing system'}
+    ],
+    'Panels':[
+      {f:'Electrical/ELETRICAL PANELS.pdf',d:'Electrical panels - Urban/Highway type and Rural type'}
+    ]
+  }},
+  culvert:{l:'Culvert',i:'water',c:'linear-gradient(135deg,#14B8A6,#0d9488)',s:{
+    'Types':[
+      {f:'Culvert/RCC CULVERT.pdf',d:'RCC culvert M20 - base slab 200mm T12@125mm, walls 12# and 16# at 150mm, PCC 1:4:8 100mm. BPCL drg by M.Gopi'},
+      {f:'Culvert/Iron Grating RCC CULVERT.pdf',d:'RCC culvert with iron grating - ISA 65x65x6 frame, 40x10mm flat'},
+      {f:'Culvert/ms grating culvert.pdf',d:'MS grating culvert variant'}
+    ]
+  }},
+  hme:{l:'HME (Canopy Structure)',i:'view_in_ar',c:'linear-gradient(135deg,#F97316,#ea580c)',s:{
+    '17 MTR Canopy':[
+      {f:'HME/BPCL 17MTR INLAND HMS.pdf',d:'17m inland canopy HMS assembly drawing'},
+      {f:'HME/BPCL 17MTR COASTAL HMS.pdf',d:'17m coastal canopy HMS - enhanced wind and salt protection'},
+      {f:'HME/17MTR INLAND DESIGN CALCULATION_compressed.pdf',d:'17m inland HMS structural design calculations'},
+      {f:'HME/17MTR COASTAL DESIGN CALCULATION_compressed.pdf',d:'17m coastal HMS structural design calculations'}
+    ],
+    '22 MTR Canopy':[
+      {f:'HME/BPCL 22MTR INLAND HMS.pdf',d:'22m inland canopy HMS assembly drawing'},
+      {f:'HME/BPCL 22MTR COASTAL HMS.pdf',d:'22m coastal canopy HMS'},
+      {f:'HME/22MTR INLAND DESIGN CALCULATION_compressed.pdf',d:'22m inland HMS structural design calculations'},
+      {f:'HME/22MTR COASTAL DESIGN CALCULATION_compressed.pdf',d:'22m coastal HMS structural design calculations'}
+    ],
+    'Foundation and Frame':[
+      {f:'HME/BPCL FOUNDATION BOLTS.pdf',d:'HME canopy foundation bolt detail'},
+      {f:'HME/FOUNDATION BOLT 17M & 22M (INL & COA)_compressed.pdf',d:'Foundation bolts for 17M and 22M inland and coastal canopy'},
+      {f:'HME/BPCL FRAME.pdf',d:'HME canopy frame drawing'},
+      {f:'HME/BPCL FRAME (1)_compressed.pdf',d:'HME canopy frame alternate version'},
+      {f:'HME/HME Drawings.pdf',d:'HME drawings consolidated set'}
+    ]
+  }},
+  monolith:{l:'Monolith',i:'vertical_align_top',c:'linear-gradient(135deg,#8B5CF6,#6d28d9)',s:{
+    'Highway Monolith 28 Sheets':
+      ['1','2','3','4','4A','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28']
+      .map(function(n){return{f:'Monolith/HIGHWAY MONOLITH/'+n+'-Model.pdf',d:'Highway Monolith Sheet '+n};}),
+    'Urban Monolith 27 Sheets':[
+      {f:'Monolith/URBAN MONOLITH/1-Model.pdf',d:'Urban Monolith Sheet 1'},
+      {f:'Monolith/URBAN MONOLITH/2Model.pdf',d:'Urban Monolith Sheet 2'},
+      {f:'Monolith/URBAN MONOLITH/3-Model.pdf',d:'Urban Monolith Sheet 3'},
+      {f:'Monolith/URBAN MONOLITH/4-Model.pdf',d:'Urban Monolith Sheet 4'},
+      {f:'Monolith/URBAN MONOLITH/4A-Model.pdf',d:'Urban Monolith Sheet 4A'},
+      {f:'Monolith/URBAN MONOLITH/5-Model.pdf',d:'Urban Monolith Sheet 5'},
+      {f:'Monolith/URBAN MONOLITH/6-Model.pdf',d:'Urban Monolith Sheet 6'},
+      {f:'Monolith/URBAN MONOLITH/7-Model.pdf',d:'Urban Monolith Sheet 7'},
+      {f:'Monolith/URBAN MONOLITH/8-Model.pdf',d:'Urban Monolith Sheet 8'},
+      {f:'Monolith/URBAN MONOLITH/9-Model.pdf',d:'Urban Monolith Sheet 9'},
+      {f:'Monolith/URBAN MONOLITH/10-Model.pdf',d:'Urban Monolith Sheet 10'},
+      {f:'Monolith/URBAN MONOLITH/11-Model.pdf',d:'Urban Monolith Sheet 11'},
+      {f:'Monolith/URBAN MONOLITH/12-Model.pdf',d:'Urban Monolith Sheet 12'},
+      {f:'Monolith/URBAN MONOLITH/13-Model.pdf',d:'Urban Monolith Sheet 13'},
+      {f:'Monolith/URBAN MONOLITH/14-Model.pdf',d:'Urban Monolith Sheet 14'},
+      {f:'Monolith/URBAN MONOLITH/15-Model.pdf',d:'Urban Monolith Sheet 15'},
+      {f:'Monolith/URBAN MONOLITH/16-Model.pdf',d:'Urban Monolith Sheet 16'},
+      {f:'Monolith/URBAN MONOLITH/17-Model.pdf',d:'Urban Monolith Sheet 17'},
+      {f:'Monolith/URBAN MONOLITH/18-Model.pdf',d:'Urban Monolith Sheet 18'},
+      {f:'Monolith/URBAN MONOLITH/19-Model.pdf',d:'Urban Monolith Sheet 19'},
+      {f:'Monolith/URBAN MONOLITH/20-Model.pdf',d:'Urban Monolith Sheet 20'},
+      {f:'Monolith/URBAN MONOLITH/21-Model.pdf',d:'Urban Monolith Sheet 21'},
+      {f:'Monolith/URBAN MONOLITH/22-Model.pdf',d:'Urban Monolith Sheet 22'},
+      {f:'Monolith/URBAN MONOLITH/23-Model.pdf',d:'Urban Monolith Sheet 23'},
+      {f:'Monolith/URBAN MONOLITH/24-Model.pdf',d:'Urban Monolith Sheet 24'},
+      {f:'Monolith/URBAN MONOLITH/25-Model.pdf',d:'Urban Monolith Sheet 25'},
+      {f:'Monolith/URBAN MONOLITH/26-Model.pdf',d:'Urban Monolith Sheet 26'},
+      {f:'Monolith/URBAN MONOLITH/27-Model.pdf',d:'Urban Monolith Sheet 27'}
+    ],
+    'Foundation':[
+      {f:'Monolith/MONOLITH FOUNDATION1.pdf',d:'Monolith foundation detail'}
+    ]
+  }},
+  nrvi:{l:'NRVI / Branding',i:'campaign',c:'linear-gradient(135deg,#EC4899,#be185d)',s:{
+    'Canopy Fascia Set 1':[
+      {f:'NRVI/Set1/CANOPY FASCIA 1-Model -2.pdf',d:'Canopy fascia Sheet 1'},
+      {f:'NRVI/Set1/CANOPY FASCIA 2 model -2.pdf',d:'Canopy fascia Sheet 2'},
+      {f:'NRVI/Set1/CANOPY FASCIA 3-Model -2.pdf',d:'Canopy fascia Sheet 3'},
+      {f:'NRVI/Set1/CANOPY FASCIA 4-Model -2.pdf',d:'Canopy fascia Sheet 4'},
+      {f:'NRVI/Set1/CANOPY FASCIA 5-Model -2.pdf',d:'Canopy fascia Sheet 5'},
+      {f:'NRVI/Set1/CANOPY FASCIA 6-Model -2.pdf',d:'Canopy fascia Sheet 6'},
+      {f:'NRVI/Set1/CANOPY FASCIA 7-Model -2.pdf',d:'Canopy fascia Sheet 7'},
+      {f:'NRVI/Set1/CANOPY FASCIA 10-Model.pdf',d:'Canopy fascia Sheet 10'},
+      {f:'NRVI/Set1/CANOPY FASCIA 11-Model.pdf',d:'Canopy fascia Sheet 11'},
+      {f:'NRVI/Set1/CANOPY FACIA 12 CORNER 12-Model.pdf',d:'Canopy fascia corner Sheet 12'},
+      {f:'NRVI/Set1/CANOPY FACIA 19 FLASHING 19-Model.pdf',d:'Canopy fascia flashing Sheet 19'},
+      {f:'NRVI/Set1/CANOPY FASCIA 13 CORNER 13-Model.pdf',d:'Canopy fascia corner Sheet 13'},
+      {f:'NRVI/Set1/CANOPY FASCIA 14 LED LIGHTING BP.RVI.CF-P14-Model.pdf',d:'Canopy fascia LED lighting Sheet 14'},
+      {f:'NRVI/Set1/CANOPY FASCIA 15-Model.pdf',d:'Canopy fascia Sheet 15'},
+      {f:'NRVI/Set1/CANOPY FASCIA 16-Model.pdf',d:'Canopy fascia Sheet 16'},
+      {f:'NRVI/Set1/CANOPY FASCIA 17-Model.pdf',d:'Canopy fascia Sheet 17'},
+      {f:'NRVI/Set1/CANOPY FASCIA 18 BPCL LETTERING 18-Model.pdf',d:'Canopy fascia BPCL lettering Sheet 18'}
+    ],
+    'Canopy Fascia Set 3':[
+      {f:'NRVI/Set3/CANOPY FASCIA LED.pdf',d:'Canopy fascia LED type'},
+      {f:'NRVI/Set3/CANOPY FASCIA thermoform bpcl (1).pdf',d:'Canopy fascia thermoform 1'},
+      {f:'NRVI/Set3/CANOPY FASCIA thermoform bpcl (2).pdf',d:'Canopy fascia thermoform 2'}
+    ],
+    'Cladding Set 2':[
+      {f:'NRVI/Set2/CLADDING 1-Model -4.pdf',d:'Cladding Sheet 1'},
+      {f:'NRVI/Set2/CLADDING 2-Model -4.pdf',d:'Cladding Sheet 2'},
+      {f:'NRVI/Set2/CLADDING 2A-Model -4.pdf',d:'Cladding Sheet 2A'},
+      {f:'NRVI/Set2/CLADDING 6-Model -4.pdf',d:'Cladding Sheet 6'},
+      {f:'NRVI/Set2/CLADDING 9-Model -4.pdf',d:'Cladding Sheet 9'},
+      {f:'NRVI/Set2/CLADDING 10-Model -4.pdf',d:'Cladding Sheet 10'},
+      {f:'NRVI/Set2/CLADDING 11-Model -4.pdf',d:'Cladding Sheet 11'},
+      {f:'NRVI/Set2/CLADDING CURVED 8-Model -4.pdf',d:'Cladding curved Sheet 8'},
+      {f:'NRVI/Set2/CLADDING GI CHANNEL 7-Model -4.pdf',d:'Cladding GI channel Sheet 7'},
+      {f:'NRVI/Set2/CLADDING-5m.pdf',d:'Cladding 5m height'},
+      {f:'NRVI/Set2/CLADDING-BELOW-5m.pdf',d:'Cladding below 5m'},
+      {f:'NRVI/Set3/CLADDING vinyl (1).pdf',d:'Cladding vinyl 1'},
+      {f:'NRVI/Set3/CLADDING vinyl (2).pdf',d:'Cladding vinyl 2'}
+    ],
+    'Spreader All Sets':[
+      {f:'NRVI/Set1/SPREADER 4-Model.pdf',d:'Spreader Sheet 4'},
+      {f:'NRVI/Set1/SPAREADER 8-Model -2.pdf',d:'Spreader Sheet 8'},
+      {f:'NRVI/Set1/SPREADER 9-Model.pdf',d:'Spreader Sheet 9'},
+      {f:'NRVI/Set2/SPREADER 1-Model -3.pdf',d:'Spreader Set2 Sheet 1'},
+      {f:'NRVI/Set2/SPREADER 2-Model -3.pdf',d:'Spreader Set2 Sheet 2'},
+      {f:'NRVI/Set2/SPREADER 3-Model -3.pdf',d:'Spreader Set2 Sheet 3'},
+      {f:'NRVI/Set2/SPREADER FRAME 4-Model -3.pdf',d:'Spreader frame Sheet 4'},
+      {f:'NRVI/Set2/SPREADER FRAME 5-Model -3.pdf',d:'Spreader frame Sheet 5'},
+      {f:'NRVI/Set2/SPREADER TOP COVER 6-Model -3.pdf',d:'Spreader top cover Sheet 6'},
+      {f:'NRVI/Set2/SPREADER BOTTOM COVER 7-Model -3.pdf',d:'Spreader bottom cover Sheet 7'},
+      {f:'NRVI/Set2/SPAREADER DISPLAY PANEL 8-Model -3.pdf',d:'Spreader display panel Sheet 8'},
+      {f:'NRVI/Set3/SPREADER EXTENSION 1-Model -10.pdf',d:'Spreader extension Sheet 1'},
+      {f:'NRVI/Set3/SPREADER EXTENSION 2-Model -10.pdf',d:'Spreader extension Sheet 2'},
+      {f:'NRVI/Set3/SPREADER EXTENSION 3-Model -10.pdf',d:'Spreader extension Sheet 3'},
+      {f:'NRVI/Set3/SPREADER EXTENSION 4-Model -10.pdf',d:'Spreader extension Sheet 4'},
+      {f:'NRVI/Set3/SPREADER LIGHT.pdf',d:'Spreader light'},
+      {f:'NRVI/Set3/SPREADER LIGHT1.pdf',d:'Spreader light detail'},
+      {f:'NRVI/Set4/Spreader-ConJoin-Assly.pdf',d:'Spreader ConJoin assembly'},
+      {f:'NRVI/Set4/Spreader-ConJoin-Bottom-cover.pdf',d:'Spreader ConJoin bottom cover'},
+      {f:'NRVI/Set4/Spreader-ConJoin-Display-panel.pdf',d:'Spreader ConJoin display panel'},
+      {f:'NRVI/Set4/Spreader-ConJoin-Top-cover.pdf',d:'Spreader ConJoin top cover'},
+      {f:'NRVI/Set4/Spreader-ConJoint-Frame.pdf',d:'Spreader ConJoin frame'}
+    ],
+    'Facility Sets 1 and 2':[
+      {f:'NRVI/Set1/FACILITY (2)-Model.pdf',d:'Facility Set1 Sheet 2'},
+      {f:'NRVI/Set1/FACILITY (3)-Model.pdf',d:'Facility Set1 Sheet 3'},
+      {f:'NRVI/Set1/FACILITY-EXPLODED (1)-Model.pdf',d:'Facility exploded view'},
+      {f:'NRVI/Set2/FACILITY_1)-Model.pdf',d:'Facility Set2 Sheet 1'},
+      {f:'NRVI/Set2/FACILITY 2-Model.pdf',d:'Facility Set2 Sheet 2'},
+      {f:'NRVI/Set2/FACILITY 3-Model.pdf',d:'Facility Set2 Sheet 3'},
+      {f:'NRVI/Set2/FACILITY FOUNDATION 4-Model.pdf',d:'Facility foundation Sheet 4'},
+      {f:'NRVI/Set2/FACILITY STRUCTURE 5-Model.pdf',d:'Facility structure Sheet 5'},
+      {f:'NRVI/Set2/FACILITY SIDE PANEL 6-Model.pdf',d:'Facility side panel Sheet 6'},
+      {f:'NRVI/Set2/FACILITY SIDE PANEL 7-Model.pdf',d:'Facility side panel Sheet 7'},
+      {f:'NRVI/Set2/FACILITY 8-Model.pdf',d:'Facility Sheet 8'},
+      {f:'NRVI/Set2/FACILITY 9-Model.pdf',d:'Facility Sheet 9'},
+      {f:'NRVI/Set2/FACILITY TOP SHEET 10-Model.pdf',d:'Facility top sheet Sheet 10'},
+      {f:'NRVI/Set2/FACILITY 11-Model.pdf',d:'Facility Sheet 11'},
+      {f:'NRVI/Set2/FACILITY 12-Model.pdf',d:'Facility Sheet 12'},
+      {f:'NRVI/Set2/FACILITY DOOR 13-Model.pdf',d:'Facility door Sheet 13'},
+      {f:'NRVI/Set2/FACILITY 14-Model.pdf',d:'Facility Sheet 14'},
+      {f:'NRVI/Set2/FACILITY FRP COVER 15-Model.pdf',d:'Facility FRP cover Sheet 15'},
+      {f:'NRVI/Set2/FACILITY BASE PLATE 16-Model.pdf',d:'Facility base plate Sheet 16'}
+    ],
+    'MPD and Signage':[
+      {f:'NRVI/Set4/MPD HOLLOW SPACE BP.RVI.MPD-A01-Model.pdf',d:'MPD hollow space A01'},
+      {f:'NRVI/Set4/MPD HOLLOW EDGELIT DISPLAY (REV-A)-Model.pdf',d:'MPD edge-lit display Rev-A'},
+      {f:'NRVI/Set4/MPD HOLLOW SPACE _ELELCT CONNECTION DETAIL.pdf',d:'MPD electrical connection detail'},
+      {f:'NRVI/Set4/MPD HOLLOW BACKLIT_RETROFIT RVI Electric Connections_R1.PDF',d:'MPD backlit LED retrofit - 3-way FLP junction box, 3x1.5mm2 Cu armoured cable. Service nos: 7006458, 7006488, 7006543'},
+      {f:'NRVI/Set4/IN AND OUT SIGN.pdf',d:'In and Out sign'},
+      {f:'NRVI/Set4/NO SIGN 1-Model -6.pdf',d:'No sign Sheet 1'},
+      {f:'NRVI/Set4/NO SIGN 2-Model -6.pdf',d:'No sign Sheet 2'},
+      {f:'NRVI/Set4/BPCL LETTERING Bharatpetroleum Letter-FACIA.pdf',d:'BPCL lettering dimensions for Bharat Petroleum facia letters'},
+      {f:'NRVI/Set4/DEALERNAME A01-Model.pdf',d:'Dealer name sign A01'}
+    ],
+    'Poster Unit':[
+      {f:'NRVI/Set4/POSTER UNIT 1-Model.pdf',d:'Poster unit Sheet 1'},
+      {f:'NRVI/Set4/POSTER UNIT 2-Model.pdf',d:'Poster unit Sheet 2'},
+      {f:'NRVI/Set4/POSTER UNIT 3-Model.pdf',d:'Poster unit Sheet 3'},
+      {f:'NRVI/Set4/POSTER UNIT 4-Model.pdf',d:'Poster unit Sheet 4'},
+      {f:'NRVI/Set4/POSTER UNIT 5-Model.pdf',d:'Poster unit Sheet 5'},
+      {f:'NRVI/Set4/POSTER UNIT BOTTOM DOOR 6-Model.pdf',d:'Poster unit bottom door'},
+      {f:'NRVI/Set4/POSTER UNIT BP.RVI.DPU-A02.pdf',d:'Poster unit DPU A02'},
+      {f:'NRVI/Set4/POSTER UNIT BP.RVI.DPU.A01-Model.pdf',d:'Poster unit DPU A01'},
+      {f:'NRVI/Set4/POSTER UNIT assly-with -graphic (1)-Model.pdf',d:'Poster unit assembly with graphic'}
+    ],
+    'Digital Price Board':[
+      {f:'NRVI/Set4/DIGITAL STOCK BOARD SPECS.pdf',d:'Digital price board specs - IP65, 6000 cd/m2, 1200x750x75mm, 3072 LEDs minimum, smartphone controlled'},
+      {f:'NRVI/Set4/DIGITAL STOCK BOARD Artwork BPCL Wifi Automation LPDB.pdf',d:'Price board artwork - Petrol and Diesel digits 200x160mm, SMS price check format'}
+    ],
+    'Emblem Wall Mounted':[
+      {f:'NRVI/Set3/EMBLEM WALL MOUNTED 1of7.pdf',d:'Wall mounted emblem Sheet 1'},
+      {f:'NRVI/Set3/EMBLEM WALL MOUNTED 2of7.pdf',d:'Wall mounted emblem Sheet 2'},
+      {f:'NRVI/Set3/EMBLEM WALL MOUNTED 3of7.pdf',d:'Wall mounted emblem Sheet 3'},
+      {f:'NRVI/Set3/EMBLEM WALL MOUNTED 4of7.pdf',d:'Wall mounted emblem Sheet 4'},
+      {f:'NRVI/Set3/EMBLEM WALL MOUNTED 5of7.pdf',d:'Wall mounted emblem Sheet 5'},
+      {f:'NRVI/Set3/EMBLEM WALL MOUNTED 6of7.pdf',d:'Wall mounted emblem Sheet 6'},
+      {f:'NRVI/Set3/EMBLEM WALL MOUNTED 7of7.pdf',d:'Wall mounted emblem Sheet 7'}
+    ],
+    'LDU and QOC':[
+      {f:'NRVI/LDU/LDU_Final  Lit  Drawing.pdf',d:'LDU Lube Display Unit - lit version final drawing'},
+      {f:'NRVI/LDU/LDU_Final Non Lit  (1).pdf',d:'LDU - non-lit version final drawing'},
+      {f:'NRVI/QOC/QOC drawing.pdf',d:'QOC structure - 8x8ft, 7ft 4in height, 1x1 inch hollow pipe 1mm, trapezoidal sheet, PCC 1:2:4 foundation'},
+      {f:'NRVI/QOC/QOC Logo Specifications.pdf',d:'QOC logo on fascia - FRP moulded with graphic pasted'}
+    ],
+    'Monolith Set 3':[
+      {f:'NRVI/Set3/MONOLITH HIGHWAY.pdf',d:'Monolith highway Set 3'},
+      {f:'NRVI/Set3/MONOLITH HIGHWAY-PFS-PANEL.pdf',d:'Monolith highway PFS panel'},
+      {f:'NRVI/Set3/MONOLITH URBAN-MONOLITH.pdf',d:'Monolith urban'},
+      {f:'NRVI/Set3/MONOLITH URBAN-PFS-PANEL.pdf',d:'Monolith urban PFS panel'},
+      {f:'NRVI/Set3/MONOLITH therfmoform-PFS-PANEL.pdf',d:'Monolith thermoform PFS panel'},
+      {f:'NRVI/Set3/MONOLITH RDU-PDU letterrings final 5 2018.pdf',d:'Monolith RDU/PDU letterings 2018'}
+    ],
+    'Other Branding':[
+      {f:'NRVI/Set1/AIRBOY CANOPY 1-Model.pdf',d:'Airboy canopy'},
+      {f:'NRVI/Set1/AIRGAUGE HOUSING.pdf',d:'Airgauge housing'},
+      {f:'NRVI/Set1/ARCHES STRUCTURE 3-Model -1.pdf',d:'Arches structure'},
+      {f:'NRVI/Set1/Additional Blue wave lighting.pdf',d:'Additional blue wave lighting'},
+      {f:'NRVI/Set1/BANNER FLOOR MOUNTED.pdf',d:'Banner floor mounted'},
+      {f:'NRVI/Set1/BUILDING FASCIA BP.RV.SF.A01-Model.pdf',d:'Building fascia A01'},
+      {f:'NRVI/Set4/BANNER STAND POLE MOUNTED 1-Model -8.pdf',d:'Banner stand pole mounted'},
+      {f:'NRVI/Set4/ISLAND-COUNTER-UNIT.PDF',d:'Island counter unit'},
+      {f:'NRVI/Set4/PEDESTAL-GUARD(REV.A)-Model.pdf',d:'Pedestal guard Rev-A'},
+      {f:'NRVI/Set3/PME-A01-Model.pdf',d:'PME A01'},
+      {f:'NRVI/Set3/PME-A02-Model.pdf',d:'PME A02'},
+      {f:'NRVI/Set3/PME-A03-Model.pdf',d:'PME A03'}
+    ]
+  }},
+  pme:{l:'PME Pole Emblem',i:'flag',c:'linear-gradient(135deg,#0EA5E9,#0284c7)',s:{
+    'Assembly':[
+      {f:'PME/PM-A01-Model.pdf',d:'PME assembly Sheet A01'},
+      {f:'PME/PM-A02-Model.pdf',d:'PME assembly Sheet A02'},
+      {f:'PME/PM-A03-Model.pdf',d:'PME assembly Sheet A03'},
+      {f:'PME/A05-Model.pdf',d:'PME Sheet A05'},
+      {f:'PME/A06-Model.pdf',d:'PME Sheet A06'}
+    ],
+    'Component Sheets':[
+      {f:'PME/4-Model.pdf',d:'PME pedestal reinforcement - M20 concrete, Fe500 TOR steel, 50mm cover, 8mm at 200mm c/c distribution'},
+      {f:'PME/P07-Model.pdf',d:'PME component P07'},
+      {f:'PME/P08-Model.pdf',d:'PME component P08'},
+      {f:'PME/P09-Model.pdf',d:'PME component P09'},
+      {f:'PME/P10-Model.pdf',d:'PME component P10'},
+      {f:'PME/P11-Model.pdf',d:'PME component P11'},
+      {f:'PME/P12-Model.pdf',d:'PME component P12'},
+      {f:'PME/P13-Model.pdf',d:'PME component P13'}
+    ],
+    'Foundation':[
+      {f:'PME/EMBLEM POLE FONUNDATION.pdf',d:'PME foundation - 1100x900x700mm, 2x ISMC 150 pillars, 4x25mm dia anchor bolts 500mm long, M200 RCC, wind 250 kg, SBC 4.07 t/m2'}
+    ]
+  }},
+  approved:{l:'Approved Makes',i:'verified',c:'linear-gradient(135deg,#22C55E,#16a34a)',s:{
+    'Reference':[
+      {f:'Approved Makes/Annexure-D9 - Approved Make of Materials.pdf',d:'49-item approved makes list - Cement UltraTech/ACC/Birla, Steel TATA/SAIL/JINDAL, Cables Finolex/Havells, MCB L&T/Siemens, Tiles Kajaria/Somany/Johnson'}
+    ]
+  }}
+};
+
+// Build flat index
+var ALL = [];
+var cats = Object.keys(D);
+cats.forEach(function(cat){
+  var meta = D[cat];
+  var skeys = Object.keys(meta.s);
+  skeys.forEach(function(sub){
+    meta.s[sub].forEach(function(item){
+      ALL.push({f:item.f, d:item.d, cat:cat, sub:sub, fname:item.f.split('/').pop()});
+    });
+  });
+});
+
+// Update counts
+cats.forEach(function(cat){
+  var n = 0;
+  Object.keys(D[cat].s).forEach(function(sub){ n += D[cat].s[sub].length; });
+  var el = document.getElementById('cc-'+cat);
+  if(el) el.textContent = n + (n===1 ? ' drawing' : ' drawings');
+});
+
+var activeCat = null;
+var filterCat = 'all';
+var view = 'cats';
+var toastUrl = '';
+var toastTimer = null;
+
+function purl(path){ return '../Std Drawings/' + path; }
+
+function ext(fname){
+  var e = fname.split('.').pop().toLowerCase();
+  var m = {pdf:'#EF4444', jpg:'#10B981', jpeg:'#10B981', png:'#10B981'};
+  return {bg: m[e] || '#64748b', label: e.toUpperCase().slice(0,3)};
+}
+
+function cleanName(fname){
+  return fname.replace(/\.[^.]+$/, '').replace(/-Model.*$/i,'').replace(/_Model.*$/i,'').replace(/_compressed.*$/i,'');
+}
+
+function renderItem(item){
+  var u = purl(item.f);
+  var eb = ext(item.fname);
+  var dn = cleanName(item.fname);
+  var safeU = u.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+  var safeDn = dn.replace(/'/g,"\\'");
+  return '<div class="file-item">' +
+    '<div class="fext" style="background:'+eb.bg+'">'+eb.label+'</div>' +
+    '<div class="finfo">' +
+      '<div class="ftitle" title="'+item.fname+'">'+dn+'</div>' +
+      (item.d ? '<div class="fdesc">'+item.d+'</div>' : '') +
+      '<div class="fbtns">' +
+        '<button class="fbtn-view" onclick="openPreview(\''+safeU+'\',\''+safeDn+'\')"><span class="material-icons">visibility</span>View</button>' +
+        '<a class="fbtn-dl" href="'+u+'" download="'+item.fname+'"><span class="material-icons">download</span></a>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function openCat(catId){
+  activeCat = catId;
+  view = 'files';
+  var meta = D[catId];
+  document.getElementById('cat-area').style.display = 'none';
+  document.getElementById('search-results').style.display = 'none';
+  var fl = document.getElementById('file-list');
+  fl.style.display = 'block';
+  document.getElementById('btn-back').style.display = 'flex';
+  document.getElementById('topbar-title').textContent = meta.l;
+  document.getElementById('breadcrumb').classList.add('show');
+  document.getElementById('bc-label').textContent = meta.l;
+  var skeys = Object.keys(meta.s);
+  var html = '';
+  skeys.forEach(function(sub){
+    if(skeys.length > 1) html += '<div class="subcat-label">'+sub+'</div>';
+    meta.s[sub].forEach(function(item){
+      html += renderItem({f:item.f, d:item.d, cat:catId, sub:sub, fname:item.f.split('/').pop()});
+    });
+  });
+  fl.innerHTML = html;
+  document.getElementById('main').scrollTop = 0;
+}
+
+function goBack(){
+  view = 'cats';
+  activeCat = null;
+  document.getElementById('cat-area').style.display = 'block';
+  document.getElementById('file-list').style.display = 'none';
+  document.getElementById('search-results').style.display = 'none';
+  document.getElementById('btn-back').style.display = 'none';
+  document.getElementById('topbar-title').textContent = 'Standard Drawings';
+  document.getElementById('breadcrumb').classList.remove('show');
+  document.getElementById('main').scrollTop = 0;
+  var sq = document.getElementById('q').value;
+  if(sq){ document.getElementById('q').value=''; document.getElementById('btn-clear').style.display='none'; }
+}
+
+function toggleSearch(){
+  var sb = document.getElementById('search-bar');
+  if(sb.classList.contains('open')){
+    sb.classList.remove('open');
+    clearQ();
+  } else {
+    sb.classList.add('open');
+    document.getElementById('q').focus();
+  }
+}
+
+function onSearch(){
+  var q = document.getElementById('q').value.trim().toLowerCase();
+  document.getElementById('btn-clear').style.display = q ? 'block' : 'none';
+  if(!q){
+    if(view === 'search') goBack();
+    return;
+  }
+  view = 'search';
+  document.getElementById('cat-area').style.display = 'none';
+  document.getElementById('file-list').style.display = 'none';
+  document.getElementById('search-results').style.display = 'block';
+  document.getElementById('btn-back').style.display = 'flex';
+  document.getElementById('topbar-title').textContent = 'Search Results';
+  document.getElementById('breadcrumb').classList.remove('show');
+  var results = ALL.filter(function(item){
+    if(filterCat !== 'all' && item.cat !== filterCat) return false;
+    return item.fname.toLowerCase().indexOf(q) > -1 ||
+           (item.d||'').toLowerCase().indexOf(q) > -1 ||
+           item.sub.toLowerCase().indexOf(q) > -1 ||
+           item.cat.indexOf(q) > -1;
+  });
+  document.getElementById('s-count').textContent = results.length + ' result' + (results.length!==1?'s':'') + ' for "' + q + '"';
+  var grid = document.getElementById('s-grid');
+  var noRes = document.getElementById('no-results');
+  if(results.length === 0){
+    grid.innerHTML = '';
+    noRes.classList.remove('hidden');
+  } else {
+    noRes.classList.add('hidden');
+    grid.innerHTML = results.map(renderItem).join('');
+  }
+}
+
+function clearQ(){
+  document.getElementById('q').value = '';
+  document.getElementById('btn-clear').style.display = 'none';
+  if(view === 'search') goBack();
+}
+
+function setF(cat, el){
+  filterCat = cat;
+  document.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
+  el.classList.add('active');
+  var q = document.getElementById('q').value.trim();
+  if(q) onSearch();
+}
+
+function openPreview(u, title){
+  toastUrl = u;
+  document.getElementById('toast-title').textContent = title;
+  var dl = document.getElementById('toast-dl');
+  dl.href = u;
+  dl.download = u.split('/').pop();
+  var t = document.getElementById('toast');
+  t.classList.remove('show');
+  void t.offsetWidth;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(closeToast, 8000);
+}
+
+function toastOpen(){
+  if(toastUrl) window.open(toastUrl, '_blank');
+}
+
+function closeToast(){
+  document.getElementById('toast').classList.remove('show');
+  clearTimeout(toastTimer);
+}
+
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeToast(); });
+</script>
+</body>
+</html>
