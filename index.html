@@ -13,6 +13,7 @@
   --t1:rgb(30,41,59);--t2:rgb(71,85,105);--tm:rgb(100,116,139);
   --border:rgb(226,232,240);--border-i:rgb(203,213,225);
   --green:#22C55E;--amber:#F59E0B;--red:#EF4444;
+  --radius:12px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{
@@ -25,23 +26,25 @@ body{
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
 
-/* TOPBAR */
+/* ── TOPBAR ── */
 #topbar{
   background:var(--dark);flex-shrink:0;
   padding:12px 16px;
   display:flex;align-items:center;gap:12px;
-  padding-top:max(12px, calc(12px + env(safe-area-inset-top)));
+  padding-top:max(12px,calc(12px + env(safe-area-inset-top)));
 }
 .logo{width:36px;height:36px;border-radius:50%;background:#1565C0;position:relative;flex-shrink:0}
 .logo::after{content:'';width:14px;height:14px;border-radius:50%;background:var(--yellow);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
 #topbar-title{font-size:clamp(14px,4vw,16px);font-weight:700;color:#fff;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #topbar-sub{font-size:10px;color:rgba(255,255,255,.45)}
-#btn-back{width:40px;height:40px;border:none;background:rgba(255,255,255,.1);border-radius:10px;display:none;align-items:center;justify-content:center;cursor:pointer;color:#fff;flex-shrink:0}
+#btn-back{width:40px;height:40px;border:none;background:rgba(255,255,255,.1);border-radius:10px;display:none;align-items:center;justify-content:center;cursor:pointer;color:#fff;flex-shrink:0;transition:background .15s}
+#btn-back:hover{background:rgba(255,255,255,.18)}
 #btn-back .material-icons{font-size:20px}
-#btn-search{width:40px;height:40px;border:none;background:rgba(255,255,255,.1);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;flex-shrink:0}
+#btn-search{width:40px;height:40px;border:none;background:rgba(255,255,255,.1);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;flex-shrink:0;transition:background .15s}
+#btn-search:hover{background:rgba(255,255,255,.18)}
 #btn-search .material-icons{font-size:20px}
 
-/* SEARCH BAR */
+/* ── SEARCH BAR ── */
 #search-bar{background:var(--dark);padding:0 16px 12px;display:none;flex-shrink:0}
 #search-bar.open{display:block}
 .sw{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border-radius:10px;padding:9px 12px}
@@ -51,28 +54,29 @@ body{
 #btn-clear{border:none;background:none;color:rgba(255,255,255,.5);cursor:pointer;padding:0;display:none;flex-shrink:0}
 #btn-clear .material-icons{font-size:17px;vertical-align:middle}
 
-/* FILTER BAR */
+/* ── FILTER BAR ── */
 #filter-bar{background:#fff;border-bottom:1px solid var(--border);padding:9px 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex-shrink:0}
 #filter-bar::-webkit-scrollbar{display:none}
 .chip{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;border:1.5px solid var(--border);background:#fff;color:var(--t2);cursor:pointer;white-space:nowrap;transition:all .15s}
 .chip.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.chip:hover:not(.active){background:var(--page);border-color:var(--border-i)}
 .chip .material-icons{font-size:14px}
 
-/* BREADCRUMB */
-#breadcrumb{padding:10px 16px 2px;font-size:12px;color:var(--tm);display:none;align-items:center;gap:4px;flex-shrink:0}
+/* ── BREADCRUMB ── */
+#breadcrumb{padding:10px 16px 2px;font-size:12px;color:var(--tm);display:none;align-items:center;gap:4px;flex-shrink:0;background:#fff;border-bottom:1px solid var(--border)}
 #breadcrumb.show{display:flex}
-#breadcrumb span{cursor:pointer}
+#breadcrumb span{cursor:pointer;transition:color .12s}
 #breadcrumb span:hover{color:var(--blue)}
-#breadcrumb b{color:var(--t1);font-weight:500}
+#breadcrumb b{color:var(--t1);font-weight:600}
 
-/* MAIN */
+/* ── MAIN SCROLL AREA ── */
 #main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
 
-/* CONTACT CARD */
+/* ── CONTACT CARD ── */
 #contact-card{
-  margin:12px 16px 0;
+  margin:0 16px 20px;
   background:linear-gradient(135deg,var(--dark),#1a2744);
-  border-radius:12px;padding:14px 16px;
+  border-radius:var(--radius);padding:14px 16px;
   display:flex;align-items:center;gap:12px;
   border:1px solid rgba(30,150,247,.2);
 }
@@ -85,94 +89,151 @@ body{
 .contact-info{flex:1;min-width:0}
 .contact-name{font-size:14px;font-weight:700;color:#fff}
 .contact-role{font-size:11px;color:rgba(255,255,255,.55);margin-top:1px}
-.contact-phone{
-  display:flex;align-items:center;gap:5px;
-  font-size:12px;font-weight:600;color:var(--blue);
-  text-decoration:none;
-}
+.contact-phone{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--blue);text-decoration:none}
 .contact-phone .material-icons{font-size:14px}
 .contact-phone:hover{color:#60bdff}
 
-/* SEC TITLE */
-.sec-title{padding:12px 16px 8px;font-size:13px;font-weight:600;color:var(--t1)}
+/* ── SECTION TITLE ── */
+.sec-title{padding:16px 16px 10px;font-size:13px;font-weight:700;color:var(--t1);letter-spacing:.02em;text-transform:uppercase}
 
-/* CATEGORY GRID */
+/* ── CATEGORY GRID ── */
 #cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 16px 16px}
 @media(min-width:480px){#cat-grid{grid-template-columns:repeat(3,1fr)}}
 @media(min-width:768px){#cat-grid{grid-template-columns:repeat(4,1fr);padding:0 20px 20px}}
-
 .cat-card{
-  background:#fff;border:1px solid var(--border);border-radius:12px;
+  background:#fff;border:1px solid var(--border);border-radius:var(--radius);
   padding:14px 12px;cursor:pointer;
   display:flex;flex-direction:column;
-  transition:box-shadow .15s,transform .15s;
+  transition:box-shadow .2s,transform .2s,border-color .15s;
   -webkit-user-select:none;user-select:none;
 }
 .cat-card:active{transform:scale(.97)}
-@media(hover:hover){.cat-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08);transform:translateY(-1px)}}
-.cat-ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+@media(hover:hover){.cat-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.1);transform:translateY(-2px);border-color:var(--blue)}}
+.cat-ico{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
 .cat-ico .material-icons{font-size:22px;color:#fff}
 .cat-name{font-size:clamp(12px,3.5vw,13.5px);font-weight:700;color:var(--t1);margin-bottom:2px}
 .cat-cnt{font-size:11px;color:var(--blue);font-weight:600}
 .cat-desc{font-size:10px;color:var(--tm);margin-top:4px;line-height:1.4;display:none}
 @media(min-width:480px){.cat-desc{display:block}}
 
-/* FILE LIST */
+/* ── FILE LIST ── */
 #file-list{display:none;padding:0 16px 32px}
 @media(min-width:768px){#file-list{padding:0 20px 24px}}
-
-.subcat-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--tm);padding:12px 0 6px;margin-top:4px;border-bottom:1px solid var(--border);margin-bottom:8px}
-
-.file-item{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px}
+.subcat-label{
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--tm);padding:14px 0 6px;margin-top:4px;
+  border-bottom:1px solid var(--border);margin-bottom:8px;
+  display:flex;align-items:center;gap:6px;
+}
+.subcat-label::before{content:'';width:3px;height:12px;border-radius:2px;background:var(--blue);display:inline-block}
+.file-item{
+  background:#fff;border:1px solid var(--border);border-radius:10px;
+  padding:12px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px;
+  transition:box-shadow .15s,border-color .15s;
+}
+@media(hover:hover){.file-item:hover{box-shadow:0 2px 12px rgba(0,0,0,.07);border-color:var(--border-i)}}
 .fext{width:36px;height:36px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;letter-spacing:.5px}
 .finfo{flex:1;min-width:0}
-.ftitle{font-size:clamp(12px,3.5vw,13px);font-weight:600;color:var(--t1);line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ftitle{font-size:clamp(12px,3.5vw,13px);font-weight:600;color:var(--t1);line-height:1.35}
 .fdesc{font-size:11px;color:var(--t2);margin-top:3px;line-height:1.4}
 .fbtns{display:flex;gap:6px;margin-top:8px}
 .fbtns button,.fbtns a{
   display:inline-flex;align-items:center;gap:4px;
   padding:6px 12px;border-radius:7px;font-size:11.5px;font-weight:600;
   cursor:pointer;font-family:"IBM Plex Sans",sans-serif;
-  min-height:36px;text-decoration:none;transition:background .15s;border:none;
+  min-height:34px;text-decoration:none;transition:background .15s;border:none;
 }
 .fbtn-view{background:rgba(30,150,247,.1);color:var(--blue);flex:1;justify-content:center}
-.fbtn-view:hover{background:rgba(30,150,247,.18)}
+.fbtn-view:hover{background:rgba(30,150,247,.2)}
 .fbtn-view .material-icons{font-size:14px}
 .fbtn-dl{background:#F8FAFC;color:var(--t2);border:1px solid var(--border) !important}
-.fbtn-dl:hover{background:var(--border)}
+.fbtn-dl:hover{background:var(--page)}
 .fbtn-dl .material-icons{font-size:14px}
 
-/* SEARCH RESULTS */
+/* ── SEARCH RESULTS ── */
 #search-results{display:none;padding:0 16px 32px}
 @media(min-width:768px){#search-results{padding:0 20px 24px}}
-.s-count{font-size:12px;color:var(--tm);padding:10px 0}
-.no-results{text-align:center;padding:48px 20px;color:var(--tm)}
-.no-results .material-icons{font-size:40px;display:block;margin-bottom:8px}
+.s-count{font-size:12px;color:var(--tm);padding:12px 0 6px;font-weight:500}
+.s-cat-tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;background:var(--page);color:var(--tm);margin-bottom:4px;margin-top:2px}
+.no-results{text-align:center;padding:60px 20px;color:var(--tm)}
+.no-results .material-icons{font-size:40px;display:block;margin-bottom:8px;opacity:.4}
+.no-results p{font-size:13px}
 
-/* TOAST */
-#toast{
-  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-  background:#1e293b;color:#F8FAFC;
-  border-radius:12px;padding:12px 16px;
-  display:none;align-items:center;gap:10px;
-  box-shadow:0 8px 30px rgba(0,0,0,.35);
-  z-index:500;max-width:92vw;min-width:280px;
-  border:1px solid rgba(255,255,255,.1);
+/* ── APPROVED MAKES VIEW ── */
+#approved-view{display:none;padding:0 16px 32px}
+@media(min-width:768px){#approved-view{padding:0 20px 24px}}
+.am-group{margin-bottom:20px}
+.am-group-header{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;
+  color:#fff;padding:6px 12px;border-radius:6px;margin-bottom:8px;
+  display:flex;align-items:center;gap:6px;
 }
-#toast.show{display:flex;animation:su .25s ease}
-@keyframes su{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-#toast-title{flex:1;font-size:12.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tbtn{display:flex;align-items:center;gap:4px;border:none;border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:"IBM Plex Sans",sans-serif;white-space:nowrap;text-decoration:none}
-#toast-open{background:var(--blue);color:#fff}
-#toast-dl{background:rgba(255,255,255,.12);color:#F8FAFC}
-#toast-x{background:none;color:rgba(255,255,255,.4);padding:4px;min-height:0}
-#toast-x .material-icons{font-size:18px}
+.am-table{width:100%;border-collapse:collapse;font-size:12px;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1px solid var(--border)}
+.am-table th{background:#F8FAFC;color:var(--t2);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.06em;padding:8px 10px;text-align:left;border-bottom:1px solid var(--border)}
+.am-table td{padding:9px 10px;border-bottom:1px solid #F1F5F9;vertical-align:top;line-height:1.4}
+.am-table tr:last-child td{border-bottom:none}
+.am-table tr:hover td{background:#FAFCFF}
+.am-sn{width:32px;color:var(--tm);font-weight:600;text-align:center;font-size:11px}
+.am-mat{font-weight:600;color:var(--t1);min-width:120px}
+.am-makes{display:flex;flex-wrap:wrap;gap:4px;min-width:0}
+.am-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:10.5px;font-weight:600;background:#EFF6FF;color:#1d4ed8;white-space:nowrap}
+.am-badge.spec{background:#FEF3C7;color:#92400e}
+.am-pdf-section{margin-top:16px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;gap:12px}
+.am-pdf-icon{width:40px;height:40px;border-radius:8px;background:#EF4444;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.am-pdf-icon .material-icons{color:#fff;font-size:20px}
+.am-pdf-info{flex:1;min-width:0}
+.am-pdf-title{font-size:13px;font-weight:700;color:var(--t1)}
+.am-pdf-sub{font-size:11px;color:var(--tm);margin-top:1px}
+.am-pdf-btn{display:inline-flex;align-items:center;gap:4px;background:rgba(30,150,247,.1);color:var(--blue);border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:"IBM Plex Sans",sans-serif;text-decoration:none;transition:background .15s;flex-shrink:0}
+.am-pdf-btn:hover{background:rgba(30,150,247,.2)}
+.am-pdf-btn .material-icons{font-size:14px}
+.am-search-bar{padding:12px 0 6px;display:flex;align-items:center;gap:8px;background:var(--page);border-radius:8px;margin-bottom:4px;padding:8px 12px;border:1px solid var(--border);background:#fff}
+.am-search-bar .material-icons{color:var(--tm);font-size:16px}
+#am-q{border:none;background:none;outline:none;font-size:13px;font-family:"IBM Plex Sans",sans-serif;color:var(--t1);flex:1}
+#am-q::placeholder{color:var(--tm)}
+
+/* ── PREVIEW MODAL ── */
+#preview-modal{
+  position:fixed;inset:0;z-index:900;
+  display:none;flex-direction:column;
+  background:rgba(0,0,0,.85);
+  animation:fadeIn .2s ease;
+}
+#preview-modal.open{display:flex}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+#preview-topbar{
+  background:#0f1623;padding:12px 16px;
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+  padding-top:max(12px,calc(12px + env(safe-area-inset-top)));
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+#preview-title{flex:1;font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#preview-dl{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.1);border:none;border-radius:8px;padding:6px 12px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;font-family:"IBM Plex Sans",sans-serif;transition:background .15s}
+#preview-dl:hover{background:rgba(255,255,255,.18)}
+#preview-dl .material-icons{font-size:15px}
+#preview-close{width:36px;height:36px;border:none;background:rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;flex-shrink:0;transition:background .15s}
+#preview-close:hover{background:rgba(255,255,255,.18)}
+#preview-close .material-icons{font-size:20px}
+#preview-iframe-wrap{flex:1;position:relative;overflow:hidden;display:flex;flex-direction:column}
+#preview-iframe{width:100%;height:100%;border:none;background:#525659}
+#preview-loading{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:#1e293b;color:rgba(255,255,255,.6);gap:12px;font-size:13px;
+}
+.spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,.15);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#preview-mobile-fallback{display:none;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:16px;padding:40px;text-align:center;background:#1e293b;color:rgba(255,255,255,.7)}
+#preview-mobile-fallback .material-icons{font-size:48px;color:rgba(255,255,255,.3)}
+#preview-mobile-fallback p{font-size:13px;line-height:1.5;max-width:280px}
+#preview-open-ext,.preview-open-btn{display:inline-flex;align-items:center;gap:6px;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:"IBM Plex Sans",sans-serif}
 
 .hidden{display:none!important}
 </style>
 </head>
 <body>
 
+<!-- TOP BAR -->
 <div id="topbar">
   <button id="btn-back" onclick="goBack()"><span class="material-icons">arrow_back</span></button>
   <div class="logo"></div>
@@ -183,46 +244,44 @@ body{
   <button id="btn-search" onclick="toggleSearch()"><span class="material-icons">search</span></button>
 </div>
 
+<!-- SEARCH BAR -->
 <div id="search-bar">
   <div class="sw">
     <span class="material-icons">search</span>
-    <input id="q" type="search" placeholder="Search drawings..." oninput="onSearch()" autocomplete="off"/>
+    <input id="q" type="search" placeholder="Search drawings, categories..." oninput="onSearch()" autocomplete="off"/>
     <button id="btn-clear" onclick="clearQ()"><span class="material-icons">close</span></button>
   </div>
 </div>
 
+<!-- FILTER CHIPS -->
 <div id="filter-bar">
-  <div class="chip active" id="fc-all"       onclick="setF('all',this)"><span class="material-icons">layers</span>All</div>
-  <div class="chip"        id="fc-civil"     onclick="setF('civil',this)"><span class="material-icons">construction</span>Civil</div>
-  <div class="chip"        id="fc-mech"      onclick="setF('mechanical',this)"><span class="material-icons">engineering</span>Mechanical</div>
-  <div class="chip"        id="fc-elec"      onclick="setF('electrical',this)"><span class="material-icons">electric_bolt</span>Electrical</div>
-  <div class="chip"        id="fc-nrvi"      onclick="setF('nrvi',this)"><span class="material-icons">campaign</span>NRVI</div>
-  <div class="chip"        id="fc-hme"       onclick="setF('hme',this)"><span class="material-icons">view_in_ar</span>HME</div>
-  <div class="chip"        id="fc-monolith"  onclick="setF('monolith',this)"><span class="material-icons">vertical_align_top</span>Monolith</div>
+  <div class="chip active" id="fc-all"       onclick="chipClick('all',this)"><span class="material-icons">layers</span>All</div>
+  <div class="chip"        id="fc-civil"     onclick="chipClick('civil',this)"><span class="material-icons">construction</span>Civil</div>
+  <div class="chip"        id="fc-salesbldg" onclick="chipClick('salesbldg',this)"><span class="material-icons">store</span>Building</div>
+  <div class="chip"        id="fc-canopy"    onclick="chipClick('canopy',this)"><span class="material-icons">roofing</span>Canopy</div>
+  <div class="chip"        id="fc-mechanical"onclick="chipClick('mechanical',this)"><span class="material-icons">water_drop</span>Tanks</div>
+  <div class="chip"        id="fc-electrical"onclick="chipClick('electrical',this)"><span class="material-icons">electric_bolt</span>Electrical</div>
+  <div class="chip"        id="fc-nrvi"      onclick="chipClick('nrvi',this)"><span class="material-icons">campaign</span>NRVI</div>
+  <div class="chip"        id="fc-hme"       onclick="chipClick('hme',this)"><span class="material-icons">highlight</span>HME</div>
+  <div class="chip"        id="fc-monolith"  onclick="chipClick('monolith',this)"><span class="material-icons">vertical_align_top</span>Monolith</div>
+  <div class="chip"        id="fc-culvert"   onclick="chipClick('culvert',this)"><span class="material-icons">water</span>Culvert</div>
+  <div class="chip"        id="fc-pme"       onclick="chipClick('pme',this)"><span class="material-icons">flag</span>PME</div>
+  <div class="chip"        id="fc-approved"  onclick="chipClick('approved',this)"><span class="material-icons">verified</span>Approved</div>
 </div>
 
+<!-- BREADCRUMB -->
 <div id="breadcrumb">
   <span onclick="goBack()">All Categories</span>
   <span class="material-icons" style="font-size:14px;color:var(--border-i)">chevron_right</span>
   <b id="bc-label">-</b>
 </div>
 
+<!-- MAIN -->
 <div id="main">
 
+  <!-- CATEGORY HOME -->
   <div id="cat-area">
-    <!-- Contact Card -->
-    <div id="contact-card">
-      <div class="contact-avatar">BK</div>
-      <div class="contact-info">
-        <div class="contact-name">Bhupesh Kumar Bajiya</div>
-        <div class="contact-role">TEM, Belgaum Territory &nbsp;|&nbsp; BPCL</div>
-      </div>
-      <a class="contact-phone" href="tel:8302176151">
-        <span class="material-icons">call</span> 830-217-6151
-      </a>
-    </div>
-
-    <div class="sec-title">Standard Drawing Categories</div>
+    <div class="sec-title">Drawing Categories</div>
     <div id="cat-grid">
       <div class="cat-card" onclick="openCat('civil')">
         <div class="cat-ico" style="background:linear-gradient(135deg,#F59E0B,#D97706)"><span class="material-icons">construction</span></div>
@@ -243,8 +302,8 @@ body{
         <div class="cat-desc">Column foundation, indicative structure with full BOM</div>
       </div>
       <div class="cat-card" onclick="openCat('mechanical')">
-        <div class="cat-ico" style="background:linear-gradient(135deg,#6366F1,#4338CA)"><span class="material-icons">engineering</span></div>
-        <div class="cat-name">Mechanical</div>
+        <div class="cat-ico" style="background:linear-gradient(135deg,#6366F1,#4338CA)"><span class="material-icons">water_drop</span></div>
+        <div class="cat-name">Tanks</div>
         <div class="cat-cnt" id="cc-mechanical">-</div>
         <div class="cat-desc">UG tanks 10/15/20/45/70 KL, earthen pit, masonry pit, HD arrangement, tank fab drawings</div>
       </div>
@@ -261,8 +320,8 @@ body{
         <div class="cat-desc">RCC culvert M20, iron grating, MS grating variants</div>
       </div>
       <div class="cat-card" onclick="openCat('hme')">
-        <div class="cat-ico" style="background:linear-gradient(135deg,#F97316,#ea580c)"><span class="material-icons">view_in_ar</span></div>
-        <div class="cat-name">HME Structure</div>
+        <div class="cat-ico" style="background:linear-gradient(135deg,#F97316,#ea580c)"><span class="material-icons">highlight</span></div>
+        <div class="cat-name">High Mast Emblem</div>
         <div class="cat-cnt" id="cc-hme">-</div>
         <div class="cat-desc">17M and 22M Inland and Coastal HMS, design calculations, foundation bolts, frame</div>
       </div>
@@ -280,67 +339,112 @@ body{
       </div>
       <div class="cat-card" onclick="openCat('pme')">
         <div class="cat-ico" style="background:linear-gradient(135deg,#0EA5E9,#0284c7)"><span class="material-icons">flag</span></div>
-        <div class="cat-name">PME Pole Emblem</div>
+        <div class="cat-name">Pole Mounted Emblem</div>
         <div class="cat-cnt" id="cc-pme">-</div>
-        <div class="cat-desc">Assembly sheets, foundation, component sheets P07-P13</div>
+        <div class="cat-desc">Assembly sheets, foundation, component sheets P07–P13</div>
       </div>
       <div class="cat-card" onclick="openCat('approved')">
         <div class="cat-ico" style="background:linear-gradient(135deg,#22C55E,#16a34a)"><span class="material-icons">verified</span></div>
         <div class="cat-name">Approved Makes</div>
-        <div class="cat-cnt" id="cc-approved">-</div>
-        <div class="cat-desc">Annexure D9 - 49 approved material brands for SOR</div>
+        <div class="cat-cnt" id="cc-approved">47 materials</div>
+        <div class="cat-desc">Annexure D9 — 47 approved material brands for SOR</div>
       </div>
     </div>
-  </div>
 
+    <!-- CONTACT CARD (bottom) -->
+    <div id="contact-card">
+      <div class="contact-avatar">BK</div>
+      <div class="contact-info">
+        <div class="contact-name">Bhupesh Kumar Bajiya</div>
+        <div class="contact-role">TEM, Belgaum Territory &nbsp;|&nbsp; BPCL</div>
+      </div>
+      <a class="contact-phone" href="tel:8302176151">
+        <span class="material-icons">call</span> 830-217-6151
+      </a>
+    </div>
+  </div><!-- /cat-area -->
+
+  <!-- FILE LIST VIEW -->
   <div id="file-list"></div>
 
+  <!-- APPROVED MAKES VIEW -->
+  <div id="approved-view"></div>
+
+  <!-- SEARCH RESULTS -->
   <div id="search-results">
     <div class="s-count" id="s-count"></div>
     <div id="s-grid"></div>
     <div id="no-results" class="no-results hidden">
       <span class="material-icons">search_off</span>
-      No drawings found
+      <p>No drawings found.<br>Try a different keyword.</p>
     </div>
   </div>
 
-</div>
+</div><!-- /main -->
 
-<div id="toast">
-  <span id="toast-title">Drawing</span>
-  <button id="toast-open" class="tbtn" onclick="toastOpen()"><span class="material-icons" style="font-size:15px">open_in_new</span>Open</button>
-  <a id="toast-dl" class="tbtn" href="#" download><span class="material-icons" style="font-size:15px">download</span></a>
-  <button id="toast-x" class="tbtn" onclick="closeToast()"><span class="material-icons">close</span></button>
+<!-- ── PDF PREVIEW MODAL ── -->
+<div id="preview-modal">
+  <div id="preview-topbar">
+    <button id="preview-close" onclick="closePreview()"><span class="material-icons">close</span></button>
+    <div id="preview-title">Drawing</div>
+    <a id="preview-dl" href="#" download target="_blank"><span class="material-icons">download</span>Download</a>
+  </div>
+  <div id="preview-iframe-wrap">
+    <div id="preview-loading">
+      <div class="spinner"></div>
+      Loading PDF…
+    </div>
+    <iframe id="preview-iframe" src="" onload="iframeLoaded()"></iframe>
+  </div>
+  <div id="preview-mobile-fallback">
+    <span class="material-icons">picture_as_pdf</span>
+    <p>PDF preview works best in a browser tab on mobile.</p>
+    <button class="preview-open-btn" id="preview-open-ext" onclick="openPreviewExt()">
+      <span class="material-icons" style="font-size:18px;margin-right:6px">open_in_new</span>Open PDF
+    </button>
+  </div>
 </div>
 
 <script>
+/* ═══════════════════════════════════════════════════════════
+   GITHUB PAGES BASE URL
+   ═══════════════════════════════════════════════════════════ */
+var BASE = 'https://pro-bhupesh.github.io/BPCL_Standard_Drawings/Std%20Drawings/';
+
+function purl(path){
+  return BASE + path.split('/').map(encodeURIComponent).join('/');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DRAWINGS DATA
+   ═══════════════════════════════════════════════════════════ */
 var D = {
-  civil:{l:'Civil Works',i:'construction',c:'linear-gradient(135deg,#F59E0B,#D97706)',s:{
+  civil:{l:'Civil Works',s:{
     'General':[
       {f:'Civil/BRICK ON EDGE TANK FARM.pdf',d:'Brick on edge tank farm construction detail'},
-      {f:'Civil/CHEVRON MARKING NH SITES -IRC 35.pdf',d:'IRC-35 NH chevron marks for deceleration (32.88m) and acceleration (55.3m) lanes. 600mm white chevron, 6m spacing'},
-      {f:'Civil/COMPOUND WALL.pdf',d:'Brick masonry compound wall - 230mm thick, 9x9 inch pillars, C.M. 1:4 plaster, max 8ft span'},
-      {f:'Civil/DOOR -WINDOWS AL SECTIONS.pdf',d:'Aluminium door and window sections - AL profiling 101x45x2.10mm, off-white powder coating'},
+      {f:'Civil/CHEVRON MARKING NH SITES -IRC 35.pdf',d:'IRC-35 NH chevron marks — deceleration 32.88m, acceleration 55.3m, 600mm white chevron, 6m spacing'},
+      {f:'Civil/COMPOUND WALL.pdf',d:'Brick masonry compound wall — 230mm thick, 9×9 inch pillars, C.M. 1:4 plaster, max 8ft span'},
+      {f:'Civil/DOOR -WINDOWS AL SECTIONS.pdf',d:'Aluminium door and window sections — AL profiling 101×45×2.10mm, off-white powder coating'},
       {f:'Civil/FENCING - BARBED WIRE AND CHAIN LINK.pdf',d:'4.5 to 6ft boundary wall with barbed wire and chain link fencing'},
       {f:'Civil/FENCING SHEET.pdf',d:'Fencing sheet standard for BPCL RO boundary'},
       {f:'Civil/HOARDINGS.pdf',d:'BPCL standard hoarding structure detail'},
-      {f:'Civil/HUME PIPE LAYING.pdf',d:'Hume pipe laying standard - IS code 456 SP-16'},
+      {f:'Civil/HUME PIPE LAYING.pdf',d:'Hume pipe laying standard — IS code 456 SP-16'},
       {f:'Civil/KERB STONE TYPICAL -PAVER WORKS.pdf',d:'Kerb stone profile for paver driveway edge finishing'},
-      {f:'Civil/LEVEL EXPLAINED-TYPICAL URBAN RO OTHER THAN NH.pdf',d:'Typical urban RO level drawing - tank slab 127mm below FDL, pedestal 200mm above FDL, building floor 300mm above FDL'},
-      {f:'Civil/MANHOLE CHAMBERS.pdf',d:'MS manhole frame and cover - sizes 450x450, 600x600, 900x900mm. ISA 50x50x6 frame. BPCL Drg BP/RET/MH/1'},
+      {f:'Civil/LEVEL EXPLAINED-TYPICAL URBAN RO OTHER THAN NH.pdf',d:'Urban RO level drawing — tank slab 127mm below FDL, pedestal 200mm above FDL, building floor 300mm above FDL'},
+      {f:'Civil/MANHOLE CHAMBERS.pdf',d:'MS manhole frame and cover — sizes 450×450, 600×600, 900×900mm. ISA 50×50×6 frame. BPCL Drg BP/RET/MH/1'},
       {f:'Civil/PEDESTAL GUARD.pdf',d:'Dispenser pedestal guard detail'},
-      {f:'Civil/PUMP ISLAND WITH POLYCRETE NOSING.pdf',d:'Pump island with polycrete nosing - standard RO layout'},
+      {f:'Civil/PUMP ISLAND WITH POLYCRETE NOSING.pdf',d:'Pump island with polycrete nosing — standard RO layout'},
       {f:'Civil/RAIN WATER HARVESTING FOR NORMAL SOIL.pdf',d:'Rain water harvesting pit for normal soil'},
-      {f:'Civil/SEPTIC TANK.pdf',d:'Septic tank with chloring chamber - capacity table 10 to 100 users'},
-      {f:'Civil/SOAK PIT.pdf',d:'Soak pit 2500x3000mm - honeycomb brick wall, brick ballast, 150mm SW pipe, RCC slab cover'},
-      {f:'Civil/SOR Brick Works.pdf',d:'Schedule of Rates - brick works reference (scanned)'}
+      {f:'Civil/SEPTIC TANK.pdf',d:'Septic tank with chloring chamber — capacity table 10 to 100 users'},
+      {f:'Civil/SOAK PIT.pdf',d:'Soak pit 2500×3000mm — honeycomb brick wall, brick ballast, 150mm SW pipe, RCC slab cover'},
+      {f:'Civil/SOR Brick Works.pdf',d:'Schedule of Rates — brick works reference (scanned)'}
     ]
   }},
-  salesbldg:{l:'Sales Building',i:'store',c:'linear-gradient(135deg,#10B981,#059669)',s:{
+  salesbldg:{l:'Sales Building',s:{
     'Building Types':[
       {f:'Civil/Sales Building/SALES BUILDINGS  -STANDARDS.pdf',d:'4 types: B0 normal RO, B0/2 rural or space constraint, B1 NH with toilets, B2 NH high potential. Signed 2022'},
-      {f:'Civil/Sales Building/Standard Sales Building Half-B0 (Oct 2025).pdf',d:'Half B0 building - Sales, Manager, DSM Change, Lube, Toilets rooms. Floor: Somany or Kajaria or Johnson tiles 600x600mm. Oct 2025'},
-      {f:'Civil/Sales Building/Sales Building Layout.pdf',d:'Sales building layout variants - B0, B0/2, B1, B2. Foundation per site condition'}
+      {f:'Civil/Sales Building/Standard Sales Building Half-B0 (Oct 2025).pdf',d:'Half B0 building — Sales, Manager, DSM Change, Lube, Toilets rooms. Somany/Kajaria/Johnson tiles 600×600mm. Oct 2025'},
+      {f:'Civil/Sales Building/Sales Building Layout.pdf',d:'Sales building layout variants — B0, B0/2, B1, B2. Foundation per site condition'}
     ],
     'B-0 Type Drawings':[
       {f:'Civil/Sales Building/B-0 Type/Sales Building B-0 Type - Sheet 1.pdf',d:'Sales building B-0 type Sheet 1'},
@@ -349,23 +453,23 @@ var D = {
       {f:'Civil/Sales Building/B-0 Type/Sales Building B-0 Type - Sheet 4.pdf',d:'Sales building B-0 type Sheet 4'}
     ]
   }},
-  canopy:{l:'Canopy',i:'roofing',c:'linear-gradient(135deg,#3B82F6,#1d4ed8)',s:{
+  canopy:{l:'Canopy',s:{
     'Canopy Structure':[
-      {f:'Canopy/CANOPY COLUMN FOUNDATION INDICATIVE.pdf',d:'Canopy footing 650x650x2000mm deep - 8x16mm bars, 8 rings at 150mm c/c, 25mm dia x 1000mm anchor bolts 8 nos, M20 RCC'},
-      {f:'Canopy/CANOPY INDICATIVE DRAWING.pdf',d:'Canopy structural BOM - Column 400x200x6mm (6.5m x 1.2m, 56.52 kg/m), base plate 20mm 650x550mm, total 1469kg per column'}
+      {f:'Canopy/CANOPY COLUMN FOUNDATION INDICATIVE.pdf',d:'Canopy footing 650×650×2000mm deep — 8×16mm bars, 8 rings at 150mm c/c, 25mm dia×1000mm anchor bolts 8 nos, M20 RCC'},
+      {f:'Canopy/CANOPY INDICATIVE DRAWING.pdf',d:'Canopy structural BOM — Column 400×200×6mm (6.5m×1.2m, 56.52 kg/m), base plate 20mm 650×550mm, total 1469kg per column'}
     ]
   }},
-  mechanical:{l:'Mechanical',i:'engineering',c:'linear-gradient(135deg,#6366F1,#4338CA)',s:{
+  mechanical:{l:'Tanks',s:{
     '10 KL Underground Tank':[
       {f:'Mechanical/Tank Fab Drawing_10-KL.pdf',d:'10 KL cylindrical UG tank fabrication drawing'},
-      {f:'Mechanical/INSTALLATION OF 10 KL CYLINDRICAL UNDERGROUND TANK IN EARTHEN PIT.pdf',d:'10 KL in earthen pit - hydraulic test 0.36 kg/cm2, dip rod 3220mm'},
-      {f:'Mechanical/INSTALLATION OF 10 KL CYLINDRICAL UNDERGROUND TANK IN MASONRY PIT.pdf',d:'10 KL in masonry pit - CM 1:3 plaster, soft earth backfill simultaneously'},
+      {f:'Mechanical/INSTALLATION OF 10 KL CYLINDRICAL UNDERGROUND TANK IN EARTHEN PIT.pdf',d:'10 KL in earthen pit — hydraulic test 0.36 kg/cm², dip rod 3220mm'},
+      {f:'Mechanical/INSTALLATION OF 10 KL CYLINDRICAL UNDERGROUND TANK IN MASONRY PIT.pdf',d:'10 KL in masonry pit — CM 1:3 plaster, soft earth backfill simultaneously'},
       {f:'Mechanical/INSTALLATION OF 10 KL TANK IN EARTH PIT WITH HOLDING DOWN ARRANGEMENT.pdf',d:'10 KL with anti-buoyancy holding down arrangement'},
-      {f:'Mechanical/INSTALLATION OF 10 KL UG TANK IN MASONARY PIT  WITH RCC SLAB ON TOP.pdf',d:'10 KL masonry pit with RCC slab on top - note: vent and suction before slab pour'}
+      {f:'Mechanical/INSTALLATION OF 10 KL UG TANK IN MASONARY PIT  WITH RCC SLAB ON TOP.pdf',d:'10 KL masonry pit with RCC slab on top — vent and suction before slab pour'}
     ],
     '15 KL Underground Tank':[
       {f:'Mechanical/Tank Fab Drawing_15-KL.pdf',d:'15 KL cylindrical UG tank fabrication drawing'},
-      {f:'Mechanical/INSTALLATION OF 15KL CYLINDRICAL UNDERGROUND TANK IN EARTHEN PIT.pdf',d:'15 KL in earthen pit - hydraulic test 0.36 kg/cm2'},
+      {f:'Mechanical/INSTALLATION OF 15KL CYLINDRICAL UNDERGROUND TANK IN EARTHEN PIT.pdf',d:'15 KL in earthen pit — hydraulic test 0.36 kg/cm²'},
       {f:'Mechanical/INSTALLATION OF 15 KL CYLINDRICAL UNDERGROUND TANK IN MASONRY PIT.pdf',d:'15 KL in masonry pit'},
       {f:'Mechanical/INSTALLATION OF 15 KL TANK IN EARTH PIT WITH HD ARRANGEMENT.pdf',d:'15 KL earth pit with holding down arrangement'},
       {f:'Mechanical/INSTALLATION OF 15 KL TANK IN MASONRY PIT WITH HD ARRANGEMENT.pdf',d:'15 KL masonry pit with HD arrangement'},
@@ -374,7 +478,7 @@ var D = {
     ],
     '20 KL Underground Tank':[
       {f:'Mechanical/Tank Fab Drawing_20-KL.pdf',d:'20 KL cylindrical UG tank fabrication drawing'},
-      {f:'Mechanical/INSTALLATION OF 20 KL TANK IN EARTH PIT.pdf',d:'20 KL in earthen pit - standard installation'},
+      {f:'Mechanical/INSTALLATION OF 20 KL TANK IN EARTH PIT.pdf',d:'20 KL in earthen pit — standard installation'},
       {f:'Mechanical/INSTALLATION OF 20 KL CYLINDRICAL UNDERGROUND TANK IN MASONRY PIT.pdf',d:'20 KL in masonry pit'},
       {f:'Mechanical/INSTALLATION OF 20 KL TANK IN EARTH PIT WITH HD ARRANGEMENT.pdf',d:'20 KL earth pit with HD arrangement'},
       {f:'Mechanical/INSTALLATION OF 20 KL TANK IN MASONRY PIT WITH HD ARRANGEMENT.pdf',d:'20 KL masonry pit with HD arrangement'},
@@ -385,60 +489,60 @@ var D = {
       {f:'Mechanical/Tank Fab Drawing_45-KL.pdf',d:'45 KL cylindrical UG tank fabrication drawing'},
       {f:'Mechanical/INSTALLATION OF 45 KL CYLINDRICAL UNDERGROUND TANK IN EARTHEN PIT.pdf',d:'45 KL in earthen pit'},
       {f:'Mechanical/INSTALLATION OF 45 KL TANK IN EARTH PIT WITH HD ARRANGEMENT.pdf',d:'45 KL earth pit with HD arrangement'},
-      {f:'Mechanical/INSTALLATION OF 45 KL UG TANK IN MASONARY PIT  WITH HOLDING DOWN ARRANGEMENT.pdf',d:'45 KL masonry pit with HD - 150mm BM wall CM 1:3, PCC 1:3:6, 10mm plaster'},
-      {f:'Mechanical/INSTALLATION OF 45 KL UG TANK IN MASONARY PIT  WITH R.C.C. SLAB ON TOP.pdf',d:'45 KL RCC slab - 20mm at 150mm c/c main bars, 700x700mm manhole. Vent and suction before slab'}
+      {f:'Mechanical/INSTALLATION OF 45 KL UG TANK IN MASONARY PIT  WITH HOLDING DOWN ARRANGEMENT.pdf',d:'45 KL masonry pit with HD — 150mm BM wall CM 1:3, PCC 1:3:6, 10mm plaster'},
+      {f:'Mechanical/INSTALLATION OF 45 KL UG TANK IN MASONARY PIT  WITH R.C.C. SLAB ON TOP.pdf',d:'45 KL RCC slab — 20mm at 150mm c/c main bars, 700×700mm manhole. Vent and suction before slab'}
     ],
     '70 KL Underground Tank':[
       {f:'Mechanical/Tank Fab Drawing_70-KL.pdf',d:'70 KL cylindrical UG tank fabrication drawing'}
     ],
     'Other':[
       {f:'Mechanical/LOCKING ARRANGEMENTS FOR DIP AND FILL CAP.pdf',d:'Locking arrangement for tank dip rod and fill cap'},
-      {f:'Mechanical/Tank Installation Details - Complete Set.pdf',d:'Complete scanned set - 36 pages covering all tank sizes 10/15/20/45 KL, all pit types and HD arrangements'}
+      {f:'Mechanical/Tank Installation Details - Complete Set.pdf',d:'Complete scanned set — 36 pages covering all tank sizes 10/15/20/45 KL, all pit types and HD arrangements'}
     ]
   }},
-  electrical:{l:'Electrical',i:'electric_bolt',c:'linear-gradient(135deg,#EF4444,#dc2626)',s:{
+  electrical:{l:'Electrical',s:{
     'Earthing':[
-      {f:'Electrical/EARTHING LAYOUT TYPICAL RO.pdf',d:'16-point RO earthing layout - E1/E2 panel, E6/E7 neutral, E8/E9 UPS/MPD, E10-E12 tanks, E13-E16 DG. Cu plate and GI pipe types'},
-      {f:'Electrical/EARTH PIT DRAWING IS 3043 2018.pdf',d:'IS 3043:2018 - pipe electrode and plate electrode earth pit. GI and Cu variants'},
+      {f:'Electrical/EARTHING LAYOUT TYPICAL RO.pdf',d:'16-point RO earthing layout — E1/E2 panel, E6/E7 neutral, E8/E9 UPS/MPD, E10–E12 tanks, E13–E16 DG. Cu plate and GI pipe types'},
+      {f:'Electrical/EARTH PIT DRAWING IS 3043 2018.pdf',d:'IS 3043:2018 — pipe electrode and plate electrode earth pit. GI and Cu variants'},
       {f:'Electrical/EARTHING SYSTEM FOR TANK LORRY.pdf',d:'Tank lorry static discharge earthing system'}
     ],
     'Panels':[
-      {f:'Electrical/ELETRICAL PANELS.pdf',d:'Electrical panels - Urban/Highway type and Rural type'}
+      {f:'Electrical/ELETRICAL PANELS.pdf',d:'Electrical panels — Urban/Highway type and Rural type'}
     ]
   }},
-  culvert:{l:'Culvert',i:'water',c:'linear-gradient(135deg,#14B8A6,#0d9488)',s:{
+  culvert:{l:'Culvert',s:{
     'Types':[
-      {f:'Culvert/RCC CULVERT.pdf',d:'RCC culvert M20 - base slab 200mm T12@125mm, walls 12# and 16# at 150mm, PCC 1:4:8 100mm. BPCL drg by M.Gopi'},
-      {f:'Culvert/Iron Grating RCC CULVERT.pdf',d:'RCC culvert with iron grating - ISA 65x65x6 frame, 40x10mm flat'},
+      {f:'Culvert/RCC CULVERT.pdf',d:'RCC culvert M20 — base slab 200mm T12@125mm, walls 12# and 16# at 150mm, PCC 1:4:8 100mm. BPCL drg by M.Gopi'},
+      {f:'Culvert/Iron Grating RCC CULVERT.pdf',d:'RCC culvert with iron grating — ISA 65×65×6 frame, 40×10mm flat'},
       {f:'Culvert/ms grating culvert.pdf',d:'MS grating culvert variant'}
     ]
   }},
-  hme:{l:'HME (Canopy Structure)',i:'view_in_ar',c:'linear-gradient(135deg,#F97316,#ea580c)',s:{
+  hme:{l:'High Mast Emblem',s:{
     '17 MTR Canopy':[
-      {f:'HME/BPCL 17MTR INLAND HMS.pdf',d:'17m inland canopy HMS assembly drawing'},
-      {f:'HME/BPCL 17MTR COASTAL HMS.pdf',d:'17m coastal canopy HMS - enhanced wind and salt protection'},
+      {f:'HME/BPCL 17MTR INLAND HMS.pdf',d:'17m inland HMS assembly drawing'},
+      {f:'HME/BPCL 17MTR COASTAL HMS.pdf',d:'17m coastal HMS — enhanced wind and salt protection'},
       {f:'HME/17MTR INLAND DESIGN CALCULATION_compressed.pdf',d:'17m inland HMS structural design calculations'},
       {f:'HME/17MTR COASTAL DESIGN CALCULATION_compressed.pdf',d:'17m coastal HMS structural design calculations'}
     ],
     '22 MTR Canopy':[
-      {f:'HME/BPCL 22MTR INLAND HMS.pdf',d:'22m inland canopy HMS assembly drawing'},
-      {f:'HME/BPCL 22MTR COASTAL HMS.pdf',d:'22m coastal canopy HMS'},
+      {f:'HME/BPCL 22MTR INLAND HMS.pdf',d:'22m inland HMS assembly drawing'},
+      {f:'HME/BPCL 22MTR COASTAL HMS.pdf',d:'22m coastal HMS'},
       {f:'HME/22MTR INLAND DESIGN CALCULATION_compressed.pdf',d:'22m inland HMS structural design calculations'},
       {f:'HME/22MTR COASTAL DESIGN CALCULATION_compressed.pdf',d:'22m coastal HMS structural design calculations'}
     ],
     'Foundation and Frame':[
-      {f:'HME/BPCL FOUNDATION BOLTS.pdf',d:'HME canopy foundation bolt detail'},
-      {f:'HME/FOUNDATION BOLT 17M & 22M (INL & COA)_compressed.pdf',d:'Foundation bolts for 17M and 22M inland and coastal canopy'},
-      {f:'HME/BPCL FRAME.pdf',d:'HME canopy frame drawing'},
-      {f:'HME/BPCL FRAME (1)_compressed.pdf',d:'HME canopy frame alternate version'},
+      {f:'HME/BPCL FOUNDATION BOLTS.pdf',d:'HME foundation bolt detail'},
+      {f:'HME/FOUNDATION BOLT 17M & 22M (INL & COA)_compressed.pdf',d:'Foundation bolts for 17M and 22M inland and coastal'},
+      {f:'HME/BPCL FRAME.pdf',d:'HME frame drawing'},
+      {f:'HME/BPCL FRAME (1)_compressed.pdf',d:'HME frame alternate version'},
       {f:'HME/HME Drawings.pdf',d:'HME drawings consolidated set'}
     ]
   }},
-  monolith:{l:'Monolith',i:'vertical_align_top',c:'linear-gradient(135deg,#8B5CF6,#6d28d9)',s:{
-    'Highway Monolith 28 Sheets':
+  monolith:{l:'Monolith',s:{
+    'Highway Monolith — 28 Sheets':
       ['1','2','3','4','4A','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28']
       .map(function(n){return{f:'Monolith/HIGHWAY MONOLITH/'+n+'-Model.pdf',d:'Highway Monolith Sheet '+n};}),
-    'Urban Monolith 27 Sheets':[
+    'Urban Monolith — 27 Sheets':[
       {f:'Monolith/URBAN MONOLITH/1-Model.pdf',d:'Urban Monolith Sheet 1'},
       {f:'Monolith/URBAN MONOLITH/2Model.pdf',d:'Urban Monolith Sheet 2'},
       {f:'Monolith/URBAN MONOLITH/3-Model.pdf',d:'Urban Monolith Sheet 3'},
@@ -472,7 +576,7 @@ var D = {
       {f:'Monolith/MONOLITH FOUNDATION1.pdf',d:'Monolith foundation detail'}
     ]
   }},
-  nrvi:{l:'NRVI / Branding',i:'campaign',c:'linear-gradient(135deg,#EC4899,#be185d)',s:{
+  nrvi:{l:'NRVI / Branding',s:{
     'Canopy Fascia Set 1':[
       {f:'NRVI/Set1/CANOPY FASCIA 1-Model -2.pdf',d:'Canopy fascia Sheet 1'},
       {f:'NRVI/Set1/CANOPY FASCIA 2 model -2.pdf',d:'Canopy fascia Sheet 2'},
@@ -561,7 +665,7 @@ var D = {
       {f:'NRVI/Set4/MPD HOLLOW SPACE BP.RVI.MPD-A01-Model.pdf',d:'MPD hollow space A01'},
       {f:'NRVI/Set4/MPD HOLLOW EDGELIT DISPLAY (REV-A)-Model.pdf',d:'MPD edge-lit display Rev-A'},
       {f:'NRVI/Set4/MPD HOLLOW SPACE _ELELCT CONNECTION DETAIL.pdf',d:'MPD electrical connection detail'},
-      {f:'NRVI/Set4/MPD HOLLOW BACKLIT_RETROFIT RVI Electric Connections_R1.PDF',d:'MPD backlit LED retrofit - 3-way FLP junction box, 3x1.5mm2 Cu armoured cable. Service nos: 7006458, 7006488, 7006543'},
+      {f:'NRVI/Set4/MPD HOLLOW BACKLIT_RETROFIT RVI Electric Connections_R1.PDF',d:'MPD backlit LED retrofit — 3-way FLP junction box, 3×1.5mm² Cu armoured cable. Service nos: 7006458, 7006488, 7006543'},
       {f:'NRVI/Set4/IN AND OUT SIGN.pdf',d:'In and Out sign'},
       {f:'NRVI/Set4/NO SIGN 1-Model -6.pdf',d:'No sign Sheet 1'},
       {f:'NRVI/Set4/NO SIGN 2-Model -6.pdf',d:'No sign Sheet 2'},
@@ -580,8 +684,8 @@ var D = {
       {f:'NRVI/Set4/POSTER UNIT assly-with -graphic (1)-Model.pdf',d:'Poster unit assembly with graphic'}
     ],
     'Digital Price Board':[
-      {f:'NRVI/Set4/DIGITAL STOCK BOARD SPECS.pdf',d:'Digital price board specs - IP65, 6000 cd/m2, 1200x750x75mm, 3072 LEDs minimum, smartphone controlled'},
-      {f:'NRVI/Set4/DIGITAL STOCK BOARD Artwork BPCL Wifi Automation LPDB.pdf',d:'Price board artwork - Petrol and Diesel digits 200x160mm, SMS price check format'}
+      {f:'NRVI/Set4/DIGITAL STOCK BOARD SPECS.pdf',d:'Digital price board specs — IP65, 6000 cd/m², 1200×750×75mm, 3072 LEDs minimum, smartphone controlled'},
+      {f:'NRVI/Set4/DIGITAL STOCK BOARD Artwork BPCL Wifi Automation LPDB.pdf',d:'Price board artwork — Petrol and Diesel digits 200×160mm, SMS price check format'}
     ],
     'Emblem Wall Mounted':[
       {f:'NRVI/Set3/EMBLEM WALL MOUNTED 1of7.pdf',d:'Wall mounted emblem Sheet 1'},
@@ -593,10 +697,10 @@ var D = {
       {f:'NRVI/Set3/EMBLEM WALL MOUNTED 7of7.pdf',d:'Wall mounted emblem Sheet 7'}
     ],
     'LDU and QOC':[
-      {f:'NRVI/LDU/LDU_Final  Lit  Drawing.pdf',d:'LDU Lube Display Unit - lit version final drawing'},
-      {f:'NRVI/LDU/LDU_Final Non Lit  (1).pdf',d:'LDU - non-lit version final drawing'},
-      {f:'NRVI/QOC/QOC drawing.pdf',d:'QOC structure - 8x8ft, 7ft 4in height, 1x1 inch hollow pipe 1mm, trapezoidal sheet, PCC 1:2:4 foundation'},
-      {f:'NRVI/QOC/QOC Logo Specifications.pdf',d:'QOC logo on fascia - FRP moulded with graphic pasted'}
+      {f:'NRVI/LDU/LDU_Final  Lit  Drawing.pdf',d:'LDU Lube Display Unit — lit version final drawing'},
+      {f:'NRVI/LDU/LDU_Final Non Lit  (1).pdf',d:'LDU — non-lit version final drawing'},
+      {f:'NRVI/QOC/QOC drawing.pdf',d:'QOC structure — 8×8ft, 7ft 4in height, 1×1 inch hollow pipe 1mm, trapezoidal sheet, PCC 1:2:4 foundation'},
+      {f:'NRVI/QOC/QOC Logo Specifications.pdf',d:'QOC logo on fascia — FRP moulded with graphic pasted'}
     ],
     'Monolith Set 3':[
       {f:'NRVI/Set3/MONOLITH HIGHWAY.pdf',d:'Monolith highway Set 3'},
@@ -621,7 +725,7 @@ var D = {
       {f:'NRVI/Set3/PME-A03-Model.pdf',d:'PME A03'}
     ]
   }},
-  pme:{l:'PME Pole Emblem',i:'flag',c:'linear-gradient(135deg,#0EA5E9,#0284c7)',s:{
+  pme:{l:'Pole Mounted Emblem',s:{
     'Assembly':[
       {f:'PME/PM-A01-Model.pdf',d:'PME assembly Sheet A01'},
       {f:'PME/PM-A02-Model.pdf',d:'PME assembly Sheet A02'},
@@ -630,7 +734,7 @@ var D = {
       {f:'PME/A06-Model.pdf',d:'PME Sheet A06'}
     ],
     'Component Sheets':[
-      {f:'PME/4-Model.pdf',d:'PME pedestal reinforcement - M20 concrete, Fe500 TOR steel, 50mm cover, 8mm at 200mm c/c distribution'},
+      {f:'PME/4-Model.pdf',d:'PME pedestal reinforcement — M20 concrete, Fe500 TOR steel, 50mm cover, 8mm at 200mm c/c distribution'},
       {f:'PME/P07-Model.pdf',d:'PME component P07'},
       {f:'PME/P08-Model.pdf',d:'PME component P08'},
       {f:'PME/P09-Model.pdf',d:'PME component P09'},
@@ -640,114 +744,335 @@ var D = {
       {f:'PME/P13-Model.pdf',d:'PME component P13'}
     ],
     'Foundation':[
-      {f:'PME/EMBLEM POLE FONUNDATION.pdf',d:'PME foundation - 1100x900x700mm, 2x ISMC 150 pillars, 4x25mm dia anchor bolts 500mm long, M200 RCC, wind 250 kg, SBC 4.07 t/m2'}
+      {f:'PME/EMBLEM POLE FONUNDATION.pdf',d:'PME foundation — 1100×900×700mm, 2×ISMC 150 pillars, 4×25mm dia anchor bolts 500mm long, M200 RCC, wind 250 kg, SBC 4.07 t/m²'}
     ]
   }},
-  approved:{l:'Approved Makes',i:'verified',c:'linear-gradient(135deg,#22C55E,#16a34a)',s:{
-    'Reference':[
-      {f:'Approved Makes/Annexure-D9 - Approved Make of Materials.pdf',d:'49-item approved makes list - Cement UltraTech/ACC/Birla, Steel TATA/SAIL/JINDAL, Cables Finolex/Havells, MCB L&T/Siemens, Tiles Kajaria/Somany/Johnson'}
-    ]
-  }}
+  approved:{l:'Approved Makes',s:{}} /* handled separately */
 };
 
-// Build flat index
+/* ═══════════════════════════════════════════════════════════
+   APPROVED MAKES DATA (Annexure D9)
+   ═══════════════════════════════════════════════════════════ */
+var AM_GROUPS = [
+  {
+    label:'Structural & Civil', color:'#F59E0B', icon:'construction',
+    items:[
+      {sn:1,  mat:'Cement',            makes:['RAMCO','CHETTINAD','COROMANDEL','DALMIA','ULTRATECH','JSW','ACC','BIRLA']},
+      {sn:2,  mat:'Brick',             makes:['Compressive strength ≥ 35 KG/CM²'], spec:true},
+      {sn:3,  mat:'Reinforced Steel',  makes:['TATA','VIZAG','SAIL','JINDAL']},
+      {sn:4,  mat:'Hume Pipe',         makes:['IS Code 456 SP-16'], spec:true},
+      {sn:6,  mat:'Aluminium',         makes:['JINDAL','HINDAL']},
+      {sn:7,  mat:'Glass',             makes:['MODI FLOAT GLASS','SAINT GOBAIN','ASAHI']}
+    ]
+  },
+  {
+    label:'Plumbing & Piping', color:'#3B82F6', icon:'water_drop',
+    items:[
+      {sn:5,  mat:'PVC Pipe',          makes:['PRINCE','WATER TECH','RELIANCE','FINOLEX']},
+      {sn:10, mat:'MS Pipe (B Class)', makes:['TATA','JINDAL']},
+      {sn:11, mat:'Seamless Pipe',     makes:['TATA','JINDAL']},
+      {sn:12, mat:'MS Fitting',        makes:['LEADER']},
+      {sn:13, mat:'GI Pipe',           makes:['TATA','JINDAL','SAIL']},
+      {sn:36, mat:'GI Fittings',       makes:['UNIQUE ORIENT']},
+      {sn:39, mat:'Water Tank',        makes:['SINTEX','KAVERY']},
+      {sn:46, mat:'PV Valve',          makes:['LEADER']},
+      {sn:47, mat:'50mm Ball Valve',   makes:['ADCO','LEADER']},
+      {sn:29, mat:'Mono Block Jet Pump',makes:['CRI','SUGUNA','TEXMO','DECCAN']}
+    ]
+  },
+  {
+    label:'Tiles & Finishing', color:'#10B981', icon:'grid_view',
+    items:[
+      {sn:8,  mat:'Glazed Tiles',          makes:['KAJARIA','SPARTEX','JOHNSONS','NAVEEN','SOMANY','BAJAJ']},
+      {sn:9,  mat:'Vitrified Tiles',        makes:['KAJARIA','SPARTEX','JOHNSONS','NAVEEN','SOMANY','BAJAJ']},
+      {sn:31, mat:'Non-Skid Ceramic Tiles', makes:['NECYER','BELL','KAJARIA','SPARTEX','BAJAJ']},
+      {sn:32, mat:'Granite Finish Tile',    makes:['MARBONITE'], spec:true},
+      {sn:25, mat:'Paints',                 makes:['SHALIMAR','ASIAN','BERGER','NEROLAC']},
+      {sn:26, mat:'Putty',                  makes:['JK','WALCARE','BIRLA']}
+    ]
+  },
+  {
+    label:'Sanitary & Hardware', color:'#14B8A6', icon:'plumbing',
+    items:[
+      {sn:14, mat:'Chinaware',     makes:['HINDWARE','PARRYWARE','CERA','NYCER']},
+      {sn:15, mat:'CP Fittings',   makes:['HINDWARE','PARRYWARE','ESSO','HAVELLS','JAQAR']},
+      {sn:35, mat:'Wall Shower',   makes:['ORIENT']},
+      {sn:37, mat:'China Ware',    makes:['HINDWARE','PARRYWARE','CERA','NYCER']},
+      {sn:38, mat:'CP Fittings',   makes:['HINDWARE','PARRYWARE','ESSO','HAVELLS','JAQAR']},
+      {sn:33, mat:'Floor Spring',  makes:['EVERITE']},
+      {sn:34, mat:'Door Closer',   makes:['EVERITE']}
+    ]
+  },
+  {
+    label:'Electrical', color:'#EF4444', icon:'electric_bolt',
+    items:[
+      {sn:16, mat:'PVC Conduit Pipe',    makes:['BAJAJ','FINOLEX','VASAVI','CHEMPLAST','KUNDAN']},
+      {sn:17, mat:'Cable',               makes:['FINOLEX','RK CABLE','HAVELLS','POLYCAP','V-GUARD']},
+      {sn:18, mat:'Wire',                makes:['HAVELLS','FINOLEX','POLYCAP','V-GUARD']},
+      {sn:19, mat:'Switches',            makes:['HAVELLS','L&T','ANCHOR','ROMA']},
+      {sn:20, mat:'MCB',                 makes:['HAVELLS','STD','L&T','SIEMENS','HAGER','MDS','INDO ASIAN']},
+      {sn:21, mat:'Control Switch Gear', makes:['L&T','SIEMENS','STD']},
+      {sn:22, mat:'Change Over',         makes:['HAVELLS','STD','L&T']},
+      {sn:23, mat:'Metering Equipment',  makes:['L&T','STD','PRICAL']},
+      {sn:24, mat:'Glands',              makes:['BALIGA']},
+      {sn:30, mat:'Fan Box',             makes:['HANUAATH','STAR','LG','3M']},
+      {sn:40, mat:'Digital Ammeter',     makes:['L&T']},
+      {sn:41, mat:'Digital Voltmeter',   makes:['L&T']},
+      {sn:42, mat:'TPN MCCB',            makes:['L&T']},
+      {sn:43, mat:'Ceiling Fan (1400mm Sweep)', makes:['BAJAJ','CROMPTON','PHILIPS','HAVELLS']},
+      {sn:44, mat:'Exhaust Fan (450mm Sweep)',  makes:['BAJAJ','CROMPTON','PHILIPS','HAVELLS']},
+      {sn:45, mat:'Speaker',             makes:['PHILIPS']}
+    ]
+  },
+  {
+    label:'Branding & Signage', color:'#EC4899', icon:'campaign',
+    items:[
+      {sn:27, mat:'Vinyl Film',       makes:['SUN']},
+      {sn:28, mat:'Flex for Hoarding',makes:['HANUAATH','STAR','LG','3M']}
+    ]
+  }
+];
+
+/* ═══════════════════════════════════════════════════════════
+   BUILD FLAT INDEX (for search — skip 'approved')
+   ═══════════════════════════════════════════════════════════ */
 var ALL = [];
-var cats = Object.keys(D);
+var cats = Object.keys(D).filter(function(k){return k!=='approved';});
 cats.forEach(function(cat){
   var meta = D[cat];
-  var skeys = Object.keys(meta.s);
-  skeys.forEach(function(sub){
+  Object.keys(meta.s).forEach(function(sub){
     meta.s[sub].forEach(function(item){
-      ALL.push({f:item.f, d:item.d, cat:cat, sub:sub, fname:item.f.split('/').pop()});
+      ALL.push({f:item.f,d:item.d,cat:cat,sub:sub,fname:item.f.split('/').pop()});
     });
   });
 });
 
-// Update counts
-cats.forEach(function(cat){
-  var n = 0;
-  Object.keys(D[cat].s).forEach(function(sub){ n += D[cat].s[sub].length; });
-  var el = document.getElementById('cc-'+cat);
-  if(el) el.textContent = n + (n===1 ? ' drawing' : ' drawings');
+/* Update counts */
+Object.keys(D).forEach(function(cat){
+  if(cat==='approved') return;
+  var n=0;
+  Object.keys(D[cat].s).forEach(function(sub){n+=D[cat].s[sub].length;});
+  var el=document.getElementById('cc-'+cat);
+  if(el) el.textContent = n+(n===1?' drawing':' drawings');
 });
 
-var activeCat = null;
-var filterCat = 'all';
-var view = 'cats';
-var toastUrl = '';
-var toastTimer = null;
+/* ═══════════════════════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════════════════════ */
+var activeCat  = null;
+var filterCat  = 'all';
+var view       = 'cats';      /* 'cats' | 'files' | 'approved' | 'search' */
+var isMobile   = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-function purl(path){ return '../Std Drawings/' + path; }
-
-function ext(fname){
-  var e = fname.split('.').pop().toLowerCase();
-  var m = {pdf:'#EF4444', jpg:'#10B981', jpeg:'#10B981', png:'#10B981'};
-  return {bg: m[e] || '#64748b', label: e.toUpperCase().slice(0,3)};
+/* ═══════════════════════════════════════════════════════════
+   URL HELPER
+   ═══════════════════════════════════════════════════════════ */
+function purl(path){
+  return BASE + path.split('/').map(encodeURIComponent).join('/');
 }
 
+/* ═══════════════════════════════════════════════════════════
+   FILE CARD RENDER
+   ═══════════════════════════════════════════════════════════ */
+function extColor(fname){
+  var e=fname.split('.').pop().toLowerCase();
+  return {pdf:'#EF4444',jpg:'#10B981',jpeg:'#10B981',png:'#10B981'}[e]||'#64748b';
+}
+function extLabel(fname){
+  return fname.split('.').pop().toUpperCase().slice(0,3);
+}
 function cleanName(fname){
-  return fname.replace(/\.[^.]+$/, '').replace(/-Model.*$/i,'').replace(/_Model.*$/i,'').replace(/_compressed.*$/i,'');
+  return fname.replace(/\.[^.]+$/,'').replace(/-Model.*$/i,'').replace(/_Model.*$/i,'').replace(/_compressed.*$/i,'').replace(/\(\d+\)$/,'').trim();
 }
 
-function renderItem(item){
-  var u = purl(item.f);
-  var eb = ext(item.fname);
+function renderItem(item, showCatTag){
+  var u  = purl(item.f);
   var dn = cleanName(item.fname);
-  var safeU = u.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+  var safeU  = u.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
   var safeDn = dn.replace(/'/g,"\\'");
-  return '<div class="file-item">' +
-    '<div class="fext" style="background:'+eb.bg+'">'+eb.label+'</div>' +
-    '<div class="finfo">' +
-      '<div class="ftitle" title="'+item.fname+'">'+dn+'</div>' +
-      (item.d ? '<div class="fdesc">'+item.d+'</div>' : '') +
-      '<div class="fbtns">' +
-        '<button class="fbtn-view" onclick="openPreview(\''+safeU+'\',\''+safeDn+'\')"><span class="material-icons">visibility</span>View</button>' +
-        '<a class="fbtn-dl" href="'+u+'" download="'+item.fname+'"><span class="material-icons">download</span></a>' +
-      '</div>' +
-    '</div>' +
+  var catTag = showCatTag ? '<div class="s-cat-tag"><span class="material-icons" style="font-size:10px">folder</span>'+D[item.cat].l+' / '+item.sub+'</div>' : '';
+  return '<div class="file-item">'+
+    '<div class="fext" style="background:'+extColor(item.fname)+'">'+extLabel(item.fname)+'</div>'+
+    '<div class="finfo">'+
+      catTag+
+      '<div class="ftitle">'+dn+'</div>'+
+      (item.d?'<div class="fdesc">'+item.d+'</div>':'')+
+      '<div class="fbtns">'+
+        '<button class="fbtn-view" onclick="openPreview(\''+safeU+'\',\''+safeDn+'\')"><span class="material-icons">visibility</span>View</button>'+
+        '<a class="fbtn-dl" href="'+u+'" download="'+item.fname+'" target="_blank" title="Download"><span class="material-icons">download</span></a>'+
+      '</div>'+
+    '</div>'+
   '</div>';
 }
 
+/* ═══════════════════════════════════════════════════════════
+   OPEN CATEGORY
+   ═══════════════════════════════════════════════════════════ */
 function openCat(catId){
+  if(catId==='approved'){ openApproved(); return; }
   activeCat = catId;
   view = 'files';
   var meta = D[catId];
-  document.getElementById('cat-area').style.display = 'none';
-  document.getElementById('search-results').style.display = 'none';
-  var fl = document.getElementById('file-list');
-  fl.style.display = 'block';
-  document.getElementById('btn-back').style.display = 'flex';
-  document.getElementById('topbar-title').textContent = meta.l;
+  document.getElementById('cat-area').style.display='none';
+  document.getElementById('search-results').style.display='none';
+  document.getElementById('approved-view').style.display='none';
+  var fl=document.getElementById('file-list');
+  fl.style.display='block';
+  document.getElementById('btn-back').style.display='flex';
+  document.getElementById('topbar-title').textContent=meta.l;
   document.getElementById('breadcrumb').classList.add('show');
-  document.getElementById('bc-label').textContent = meta.l;
-  var skeys = Object.keys(meta.s);
-  var html = '';
+  document.getElementById('bc-label').textContent=meta.l;
+  var skeys=Object.keys(meta.s);
+  var html='<div style="padding-top:4px">';
   skeys.forEach(function(sub){
-    if(skeys.length > 1) html += '<div class="subcat-label">'+sub+'</div>';
+    if(skeys.length>1) html+='<div class="subcat-label">'+sub+'</div>';
     meta.s[sub].forEach(function(item){
-      html += renderItem({f:item.f, d:item.d, cat:catId, sub:sub, fname:item.f.split('/').pop()});
+      html+=renderItem({f:item.f,d:item.d,cat:catId,sub:sub,fname:item.f.split('/').pop()},false);
     });
   });
-  fl.innerHTML = html;
-  document.getElementById('main').scrollTop = 0;
+  html+='</div>';
+  fl.innerHTML=html;
+  document.getElementById('main').scrollTop=0;
+  /* sync chip */
+  syncChip(catId);
 }
 
+/* ═══════════════════════════════════════════════════════════
+   OPEN APPROVED MAKES
+   ═══════════════════════════════════════════════════════════ */
+function openApproved(){
+  activeCat='approved';
+  view='approved';
+  document.getElementById('cat-area').style.display='none';
+  document.getElementById('file-list').style.display='none';
+  document.getElementById('search-results').style.display='none';
+  var av=document.getElementById('approved-view');
+  av.style.display='block';
+  document.getElementById('btn-back').style.display='flex';
+  document.getElementById('topbar-title').textContent='Approved Makes';
+  document.getElementById('breadcrumb').classList.add('show');
+  document.getElementById('bc-label').textContent='Approved Makes — Annexure D9';
+  syncChip('approved');
+
+  var allRows = AM_GROUPS.map(function(g){ return g.items; }).reduce(function(a,b){return a.concat(b);});
+
+  var html = '<div style="padding-top:8px">'+
+    /* search inside approved makes */
+    '<div class="am-search-bar"><span class="material-icons">search</span><input id="am-q" type="text" placeholder="Filter materials or brands…" oninput="filterAM()" autocomplete="off"/></div>'+
+    '<div id="am-body">';
+
+  AM_GROUPS.forEach(function(g){
+    html += '<div class="am-group" id="amg-'+g.label.replace(/\W/g,'_')+'">'+
+      '<div class="am-group-header" style="background:'+g.color+'">'+
+        '<span class="material-icons" style="font-size:16px">'+g.icon+'</span>'+g.label+
+      '</div>'+
+      '<table class="am-table">'+
+        '<thead><tr><th class="am-sn">#</th><th class="am-mat">Material</th><th>Approved Makes</th></tr></thead><tbody>';
+    g.items.forEach(function(item){
+      html+='<tr data-mat="'+item.mat.toLowerCase()+'" data-makes="'+item.makes.join(' ').toLowerCase()+'">'+
+        '<td class="am-sn">'+item.sn+'</td>'+
+        '<td class="am-mat">'+item.mat+'</td>'+
+        '<td><div class="am-makes">';
+      item.makes.forEach(function(m){
+        html+='<span class="am-badge'+(item.spec?' spec':'')+'">'+m+'</span>';
+      });
+      html+='</div></td></tr>';
+    });
+    html+='</tbody></table></div>';
+  });
+
+  html+='<div id="am-no-results" class="no-results hidden"><span class="material-icons">search_off</span><p>No materials found.</p></div>';
+  html+='</div>'; /* /am-body */
+
+  /* PDF reference at bottom */
+  var pdfUrl = purl('Approved Makes/Annexure-D9 - Approved Make of Materials.pdf');
+  html+='<div class="am-pdf-section">'+
+    '<div class="am-pdf-icon"><span class="material-icons">picture_as_pdf</span></div>'+
+    '<div class="am-pdf-info">'+
+      '<div class="am-pdf-title">Annexure D9 — Original PDF</div>'+
+      '<div class="am-pdf-sub">Approved Make of Materials for SOR · 47 items</div>'+
+    '</div>'+
+    '<button class="am-pdf-btn" onclick="openPreview(\''+pdfUrl+'\',\'Annexure D9 - Approved Makes\')">'+
+      '<span class="material-icons">visibility</span>View'+
+    '</button>'+
+    '<a class="am-pdf-btn" href="'+pdfUrl+'" download="Annexure-D9.pdf" target="_blank" style="margin-left:6px">'+
+      '<span class="material-icons">download</span>'+
+    '</a>'+
+  '</div>';
+
+  html+='</div>'; /* /outer */
+  av.innerHTML=html;
+  document.getElementById('main').scrollTop=0;
+}
+
+function filterAM(){
+  var q=(document.getElementById('am-q').value||'').toLowerCase().trim();
+  var anyVisible=false;
+  AM_GROUPS.forEach(function(g){
+    var gEl=document.getElementById('amg-'+g.label.replace(/\W/g,'_'));
+    if(!gEl) return;
+    var rows=gEl.querySelectorAll('tbody tr');
+    var groupVisible=false;
+    rows.forEach(function(row){
+      var match=!q||row.dataset.mat.indexOf(q)>-1||row.dataset.makes.indexOf(q)>-1;
+      row.style.display=match?'':'none';
+      if(match) groupVisible=true;
+    });
+    gEl.style.display=groupVisible?'':'none';
+    if(groupVisible) anyVisible=true;
+  });
+  var noR=document.getElementById('am-no-results');
+  if(noR) noR.classList.toggle('hidden',anyVisible||!q);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════════════════════════════ */
 function goBack(){
-  view = 'cats';
-  activeCat = null;
-  document.getElementById('cat-area').style.display = 'block';
-  document.getElementById('file-list').style.display = 'none';
-  document.getElementById('search-results').style.display = 'none';
-  document.getElementById('btn-back').style.display = 'none';
-  document.getElementById('topbar-title').textContent = 'Standard Drawings';
+  view='cats';
+  activeCat=null;
+  document.getElementById('cat-area').style.display='block';
+  document.getElementById('file-list').style.display='none';
+  document.getElementById('approved-view').style.display='none';
+  document.getElementById('search-results').style.display='none';
+  document.getElementById('btn-back').style.display='none';
+  document.getElementById('topbar-title').textContent='Standard Drawings';
   document.getElementById('breadcrumb').classList.remove('show');
-  document.getElementById('main').scrollTop = 0;
-  var sq = document.getElementById('q').value;
-  if(sq){ document.getElementById('q').value=''; document.getElementById('btn-clear').style.display='none'; }
+  document.getElementById('main').scrollTop=0;
+  var sq=document.getElementById('q').value;
+  if(sq){document.getElementById('q').value='';document.getElementById('btn-clear').style.display='none';}
+  syncChip(filterCat);
 }
 
+/* ═══════════════════════════════════════════════════════════
+   FILTER CHIPS
+   ═══════════════════════════════════════════════════════════ */
+function syncChip(catId){
+  document.querySelectorAll('.chip').forEach(function(c){c.classList.remove('active');});
+  var el=document.getElementById('fc-'+(catId==='all'?'all':catId));
+  if(el) el.classList.add('active');
+}
+
+function chipClick(cat, el){
+  filterCat = cat;
+  var q=document.getElementById('q').value.trim();
+  if(q){
+    /* in search mode — filter results */
+    syncChip(cat);
+    onSearch();
+  } else if(cat==='all'){
+    goBack();
+  } else {
+    /* navigate directly to category */
+    openCat(cat);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SEARCH
+   ═══════════════════════════════════════════════════════════ */
 function toggleSearch(){
-  var sb = document.getElementById('search-bar');
+  var sb=document.getElementById('search-bar');
   if(sb.classList.contains('open')){
     sb.classList.remove('open');
     clearQ();
@@ -758,76 +1083,107 @@ function toggleSearch(){
 }
 
 function onSearch(){
-  var q = document.getElementById('q').value.trim().toLowerCase();
-  document.getElementById('btn-clear').style.display = q ? 'block' : 'none';
+  var q=document.getElementById('q').value.trim().toLowerCase();
+  document.getElementById('btn-clear').style.display=q?'block':'none';
   if(!q){
-    if(view === 'search') goBack();
+    if(view==='search') goBack();
     return;
   }
-  view = 'search';
-  document.getElementById('cat-area').style.display = 'none';
-  document.getElementById('file-list').style.display = 'none';
-  document.getElementById('search-results').style.display = 'block';
-  document.getElementById('btn-back').style.display = 'flex';
-  document.getElementById('topbar-title').textContent = 'Search Results';
+  view='search';
+  document.getElementById('cat-area').style.display='none';
+  document.getElementById('file-list').style.display='none';
+  document.getElementById('approved-view').style.display='none';
+  document.getElementById('search-results').style.display='block';
+  document.getElementById('btn-back').style.display='flex';
+  document.getElementById('topbar-title').textContent='Search';
   document.getElementById('breadcrumb').classList.remove('show');
-  var results = ALL.filter(function(item){
-    if(filterCat !== 'all' && item.cat !== filterCat) return false;
-    return item.fname.toLowerCase().indexOf(q) > -1 ||
-           (item.d||'').toLowerCase().indexOf(q) > -1 ||
-           item.sub.toLowerCase().indexOf(q) > -1 ||
-           item.cat.indexOf(q) > -1;
+  var results=ALL.filter(function(item){
+    if(filterCat!=='all'&&item.cat!==filterCat) return false;
+    return item.fname.toLowerCase().indexOf(q)>-1||
+           (item.d||'').toLowerCase().indexOf(q)>-1||
+           item.sub.toLowerCase().indexOf(q)>-1||
+           D[item.cat].l.toLowerCase().indexOf(q)>-1;
   });
-  document.getElementById('s-count').textContent = results.length + ' result' + (results.length!==1?'s':'') + ' for "' + q + '"';
-  var grid = document.getElementById('s-grid');
-  var noRes = document.getElementById('no-results');
-  if(results.length === 0){
-    grid.innerHTML = '';
+  document.getElementById('s-count').textContent=results.length+' result'+(results.length!==1?'s':'')+' for "'+document.getElementById('q').value.trim()+'"';
+  var grid=document.getElementById('s-grid');
+  var noRes=document.getElementById('no-results');
+  if(results.length===0){
+    grid.innerHTML='';
     noRes.classList.remove('hidden');
   } else {
     noRes.classList.add('hidden');
-    grid.innerHTML = results.map(renderItem).join('');
+    grid.innerHTML=results.map(function(i){return renderItem(i,true);}).join('');
   }
 }
 
 function clearQ(){
-  document.getElementById('q').value = '';
-  document.getElementById('btn-clear').style.display = 'none';
-  if(view === 'search') goBack();
+  document.getElementById('q').value='';
+  document.getElementById('btn-clear').style.display='none';
+  if(view==='search') goBack();
 }
 
-function setF(cat, el){
-  filterCat = cat;
-  document.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
-  el.classList.add('active');
-  var q = document.getElementById('q').value.trim();
-  if(q) onSearch();
-}
+/* ═══════════════════════════════════════════════════════════
+   PDF PREVIEW MODAL
+   ═══════════════════════════════════════════════════════════ */
+var currentPreviewUrl = '';
 
 function openPreview(u, title){
-  toastUrl = u;
-  document.getElementById('toast-title').textContent = title;
-  var dl = document.getElementById('toast-dl');
-  dl.href = u;
-  dl.download = u.split('/').pop();
-  var t = document.getElementById('toast');
-  t.classList.remove('show');
-  void t.offsetWidth;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(closeToast, 8000);
+  currentPreviewUrl = u;
+  document.getElementById('preview-title').textContent = title;
+  var dlEl = document.getElementById('preview-dl');
+  dlEl.href = u;
+  dlEl.download = u.split('/').pop();
+
+  var modal = document.getElementById('preview-modal');
+  var wrap  = document.getElementById('preview-iframe-wrap');
+  var mfall = document.getElementById('preview-mobile-fallback');
+  var loading = document.getElementById('preview-loading');
+  var iframe  = document.getElementById('preview-iframe');
+
+  /* Show modal */
+  document.body.style.overflow = 'hidden';
+  modal.classList.add('open');
+
+  if(isMobile){
+    /* On mobile — show fallback with open button */
+    wrap.style.display = 'none';
+    mfall.style.display = 'flex';
+    document.getElementById('preview-open-ext').onclick = function(){ window.open(u,'_blank'); };
+  } else {
+    wrap.style.display = 'flex';
+    mfall.style.display = 'none';
+    loading.style.display = 'flex';
+    iframe.src = '';
+    /* small delay so modal animation completes first */
+    setTimeout(function(){ iframe.src = u; }, 100);
+  }
 }
 
-function toastOpen(){
-  if(toastUrl) window.open(toastUrl, '_blank');
+function iframeLoaded(){
+  document.getElementById('preview-loading').style.display = 'none';
 }
 
-function closeToast(){
-  document.getElementById('toast').classList.remove('show');
-  clearTimeout(toastTimer);
+function openPreviewExt(){
+  if(currentPreviewUrl) window.open(currentPreviewUrl,'_blank');
 }
 
-document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeToast(); });
+function closePreview(){
+  var modal = document.getElementById('preview-modal');
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+  var iframe = document.getElementById('preview-iframe');
+  setTimeout(function(){ iframe.src=''; },300);
+}
+
+/* keyboard close */
+document.addEventListener('keydown', function(e){
+  if(e.key==='Escape') closePreview();
+});
+
+/* ═══════════════════════════════════════════════════════════
+   INIT — set chip state
+   ═══════════════════════════════════════════════════════════ */
+syncChip('all');
 </script>
 </body>
 </html>
