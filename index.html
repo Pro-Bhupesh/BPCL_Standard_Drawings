@@ -217,9 +217,9 @@ body{
   border-bottom:1px solid rgba(255,255,255,.08);
 }
 #preview-title{flex:1;font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#preview-dl{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.1);border:none;border-radius:8px;padding:6px 12px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;font-family:"IBM Plex Sans",sans-serif;transition:background .15s}
-#preview-dl:hover{background:rgba(255,255,255,.18)}
-#preview-dl .material-icons{font-size:15px}
+#preview-dl,#preview-opentab{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.1);border:none;border-radius:8px;padding:8px 10px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;font-family:"IBM Plex Sans",sans-serif;transition:background .15s;flex-shrink:0}
+#preview-dl:hover,#preview-opentab:hover{background:rgba(255,255,255,.2)}
+#preview-dl .material-icons,#preview-opentab .material-icons{font-size:18px}
 #preview-close{width:36px;height:36px;border:none;background:rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;flex-shrink:0;transition:background .15s}
 #preview-close:hover{background:rgba(255,255,255,.18)}
 #preview-close .material-icons{font-size:20px}
@@ -236,6 +236,38 @@ body{
 #preview-mobile-fallback .material-icons{font-size:48px;color:rgba(255,255,255,.3)}
 #preview-mobile-fallback p{font-size:13px;line-height:1.5;max-width:280px}
 #preview-open-ext,.preview-open-btn{display:inline-flex;align-items:center;gap:6px;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:"IBM Plex Sans",sans-serif}
+
+/* ── OFFLINE DOWNLOAD CARD ── */
+#offline-card{
+  margin:12px 16px 4px;border-radius:var(--radius);overflow:hidden;
+  border:1px solid var(--border);background:#fff;
+}
+.oc-idle,.oc-done,.oc-downloading,.oc-partial{padding:14px 16px;display:none}
+.oc-idle.active,.oc-done.active,.oc-downloading.active,.oc-partial.active{display:flex;align-items:center;gap:12px}
+.oc-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.oc-icon .material-icons{font-size:20px}
+.oc-body{flex:1;min-width:0}
+.oc-title{font-size:13px;font-weight:700;color:var(--t1)}
+.oc-sub{font-size:11px;color:var(--tm);margin-top:1px}
+.oc-btn{border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:"IBM Plex Sans",sans-serif;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:5px;transition:opacity .15s}
+.oc-btn:active{opacity:.7}
+.oc-btn .material-icons{font-size:15px}
+.oc-btn-dl{background:var(--blue);color:#fff}
+.oc-btn-cancel{background:rgba(239,68,68,.1);color:var(--red)}
+.oc-btn-refresh{background:var(--page);color:var(--t2);border:1px solid var(--border) !important}
+.oc-btn-clear{background:none;color:var(--tm);font-size:11px;font-weight:500;padding:4px 8px}
+
+/* progress bar */
+.oc-prog-wrap{padding:0 16px 14px}
+.oc-prog-bar-bg{height:6px;background:var(--page);border-radius:3px;overflow:hidden;margin-bottom:8px}
+.oc-prog-bar{height:100%;background:var(--blue);border-radius:3px;transition:width .3s;width:0%}
+.oc-prog-meta{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--tm)}
+.oc-prog-file{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-right:8px}
+.oc-prog-count{font-weight:700;color:var(--blue);white-space:nowrap}
+
+/* offline badge on file items */
+.badge-offline{display:inline-flex;align-items:center;gap:3px;background:#dcfce7;color:#166534;font-size:9px;font-weight:700;border-radius:6px;padding:2px 6px;margin-left:6px;vertical-align:middle}
+.badge-offline .material-icons{font-size:10px}
 
 /* ── PWA INSTALL BANNER ── */
 #install-banner{
@@ -355,6 +387,59 @@ body{
 
   <!-- CATEGORY HOME -->
   <div id="cat-area">
+    <!-- OFFLINE DOWNLOAD CARD -->
+    <div id="offline-card">
+
+      <!-- idle: not downloaded -->
+      <div class="oc-idle" id="oc-idle">
+        <div class="oc-icon" style="background:#EFF6FF"><span class="material-icons" style="color:var(--blue)">cloud_download</span></div>
+        <div class="oc-body">
+          <div class="oc-title">Download for Offline</div>
+          <div class="oc-sub" id="oc-idle-sub">All drawings · Works without internet</div>
+        </div>
+        <button class="oc-btn oc-btn-dl" onclick="startDownload()"><span class="material-icons">download</span>Download</button>
+      </div>
+
+      <!-- downloading -->
+      <div class="oc-downloading" id="oc-downloading">
+        <div class="oc-icon" style="background:#EFF6FF"><span class="material-icons" style="color:var(--blue);animation:spin .8s linear infinite">sync</span></div>
+        <div class="oc-body">
+          <div class="oc-title">Downloading…</div>
+          <div class="oc-sub" id="oc-dl-sub">Starting…</div>
+        </div>
+        <button class="oc-btn oc-btn-cancel" onclick="cancelDownload()"><span class="material-icons">close</span>Cancel</button>
+      </div>
+      <div class="oc-prog-wrap" id="oc-prog-wrap" style="display:none">
+        <div class="oc-prog-bar-bg"><div class="oc-prog-bar" id="oc-prog-bar"></div></div>
+        <div class="oc-prog-meta">
+          <div class="oc-prog-file" id="oc-prog-file">—</div>
+          <div class="oc-prog-count" id="oc-prog-count">0 / 0</div>
+        </div>
+      </div>
+
+      <!-- done -->
+      <div class="oc-done" id="oc-done">
+        <div class="oc-icon" style="background:#dcfce7"><span class="material-icons" style="color:#16a34a">offline_pin</span></div>
+        <div class="oc-body">
+          <div class="oc-title">Available Offline</div>
+          <div class="oc-sub" id="oc-done-sub">All drawings cached</div>
+        </div>
+        <button class="oc-btn oc-btn-refresh" onclick="startDownload(true)"><span class="material-icons">refresh</span></button>
+        <button class="oc-btn oc-btn-clear" onclick="clearOfflineCache()">Clear</button>
+      </div>
+
+      <!-- partial -->
+      <div class="oc-partial" id="oc-partial">
+        <div class="oc-icon" style="background:#FEF3C7"><span class="material-icons" style="color:#92400e">warning</span></div>
+        <div class="oc-body">
+          <div class="oc-title">Partially Downloaded</div>
+          <div class="oc-sub" id="oc-partial-sub">Some files failed</div>
+        </div>
+        <button class="oc-btn oc-btn-dl" onclick="startDownload(true)"><span class="material-icons">refresh</span>Retry</button>
+      </div>
+
+    </div><!-- /offline-card -->
+
     <div class="sec-title">Drawing Categories</div>
     <div id="cat-grid">
       <div class="cat-card" onclick="openCat('civil')">
@@ -403,19 +488,19 @@ body{
         <div class="cat-ico" style="background:linear-gradient(135deg,#8B5CF6,#6d28d9)"><span class="material-icons">vertical_align_top</span></div>
         <div class="cat-name">Monolith</div>
         <div class="cat-cnt" id="cc-monolith">-</div>
-        <div class="cat-desc">Highway monolith 28 sheets, Urban monolith 27 sheets, foundation</div>
+        <div class="cat-desc">4 merged PDFs — foundation, highway (28 sheets), urban (27 sheets), branding panels</div>
       </div>
       <div class="cat-card" onclick="openCat('nrvi')">
         <div class="cat-ico" style="background:linear-gradient(135deg,#EC4899,#be185d)"><span class="material-icons">campaign</span></div>
         <div class="cat-name">NRVI / Branding</div>
         <div class="cat-cnt" id="cc-nrvi">-</div>
-        <div class="cat-desc">Canopy fascia, cladding, spreader, facility, MPD, poster unit, LDU, QOC, emblem</div>
+        <div class="cat-desc">6 merged PDFs — fascia, cladding, spreader, facility, MPD/signage, emblem/LDU</div>
       </div>
       <div class="cat-card" onclick="openCat('pme')">
         <div class="cat-ico" style="background:linear-gradient(135deg,#0EA5E9,#0284c7)"><span class="material-icons">flag</span></div>
         <div class="cat-name">Pole Mounted Emblem</div>
         <div class="cat-cnt" id="cc-pme">-</div>
-        <div class="cat-desc">Assembly sheets, foundation, component sheets P07–P13</div>
+        <div class="cat-desc">Foundation separate + merged PDF of assembly A01–A06 and components P07–P13</div>
       </div>
       <div class="cat-card" onclick="openCat('approved')">
         <div class="cat-ico" style="background:linear-gradient(135deg,#22C55E,#16a34a)"><span class="material-icons">verified</span></div>
@@ -461,7 +546,8 @@ body{
   <div id="preview-topbar">
     <button id="preview-close" onclick="closePreview()"><span class="material-icons">close</span></button>
     <div id="preview-title">Drawing</div>
-    <a id="preview-dl" href="#" download target="_blank"><span class="material-icons">download</span>Download</a>
+    <button id="preview-opentab" onclick="openPreviewExt()" title="Open in browser tab"><span class="material-icons">open_in_new</span></button>
+    <a id="preview-dl" href="#" download target="_blank" title="Download"><span class="material-icons">download</span></a>
   </div>
   <div id="preview-iframe-wrap">
     <div id="preview-loading">
@@ -613,212 +699,45 @@ var D = {
     ]
   }},
   monolith:{l:'Monolith',s:{
-    'Highway Monolith — 28 Sheets':
-      ['1','2','3','4','4A','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28']
-      .map(function(n){return{f:'Monolith/HIGHWAY MONOLITH/'+n+'-Model.pdf',d:'Highway Monolith Sheet '+n};}),
-    'Urban Monolith — 27 Sheets':[
-      {f:'Monolith/URBAN MONOLITH/1-Model.pdf',d:'Urban Monolith Sheet 1'},
-      {f:'Monolith/URBAN MONOLITH/2Model.pdf',d:'Urban Monolith Sheet 2'},
-      {f:'Monolith/URBAN MONOLITH/3-Model.pdf',d:'Urban Monolith Sheet 3'},
-      {f:'Monolith/URBAN MONOLITH/4-Model.pdf',d:'Urban Monolith Sheet 4'},
-      {f:'Monolith/URBAN MONOLITH/4A-Model.pdf',d:'Urban Monolith Sheet 4A'},
-      {f:'Monolith/URBAN MONOLITH/5-Model.pdf',d:'Urban Monolith Sheet 5'},
-      {f:'Monolith/URBAN MONOLITH/6-Model.pdf',d:'Urban Monolith Sheet 6'},
-      {f:'Monolith/URBAN MONOLITH/7-Model.pdf',d:'Urban Monolith Sheet 7'},
-      {f:'Monolith/URBAN MONOLITH/8-Model.pdf',d:'Urban Monolith Sheet 8'},
-      {f:'Monolith/URBAN MONOLITH/9-Model.pdf',d:'Urban Monolith Sheet 9'},
-      {f:'Monolith/URBAN MONOLITH/10-Model.pdf',d:'Urban Monolith Sheet 10'},
-      {f:'Monolith/URBAN MONOLITH/11-Model.pdf',d:'Urban Monolith Sheet 11'},
-      {f:'Monolith/URBAN MONOLITH/12-Model.pdf',d:'Urban Monolith Sheet 12'},
-      {f:'Monolith/URBAN MONOLITH/13-Model.pdf',d:'Urban Monolith Sheet 13'},
-      {f:'Monolith/URBAN MONOLITH/14-Model.pdf',d:'Urban Monolith Sheet 14'},
-      {f:'Monolith/URBAN MONOLITH/15-Model.pdf',d:'Urban Monolith Sheet 15'},
-      {f:'Monolith/URBAN MONOLITH/16-Model.pdf',d:'Urban Monolith Sheet 16'},
-      {f:'Monolith/URBAN MONOLITH/17-Model.pdf',d:'Urban Monolith Sheet 17'},
-      {f:'Monolith/URBAN MONOLITH/18-Model.pdf',d:'Urban Monolith Sheet 18'},
-      {f:'Monolith/URBAN MONOLITH/19-Model.pdf',d:'Urban Monolith Sheet 19'},
-      {f:'Monolith/URBAN MONOLITH/20-Model.pdf',d:'Urban Monolith Sheet 20'},
-      {f:'Monolith/URBAN MONOLITH/21-Model.pdf',d:'Urban Monolith Sheet 21'},
-      {f:'Monolith/URBAN MONOLITH/22-Model.pdf',d:'Urban Monolith Sheet 22'},
-      {f:'Monolith/URBAN MONOLITH/23-Model.pdf',d:'Urban Monolith Sheet 23'},
-      {f:'Monolith/URBAN MONOLITH/24-Model.pdf',d:'Urban Monolith Sheet 24'},
-      {f:'Monolith/URBAN MONOLITH/25-Model.pdf',d:'Urban Monolith Sheet 25'},
-      {f:'Monolith/URBAN MONOLITH/26-Model.pdf',d:'Urban Monolith Sheet 26'},
-      {f:'Monolith/URBAN MONOLITH/27-Model.pdf',d:'Urban Monolith Sheet 27'}
-    ],
     'Foundation':[
-      {f:'Monolith/MONOLITH FOUNDATION1.pdf',d:'Monolith foundation detail'}
+      {f:'Monolith/MONOLITH FOUNDATION1.pdf',d:'Foundation detail — footing dimensions, reinforcement, PCC bed'}
+    ],
+    'Highway Monolith':[
+      {f:'Monolith/Merged/Highway Monolith - All 28 Sheets.pdf',d:'All 28 sheets merged — plan, elevation, sections, foundation, structural details'}
+    ],
+    'Urban Monolith':[
+      {f:'Monolith/Merged/Urban Monolith - All 27 Sheets.pdf',d:'All 27 sheets merged — plan, elevation, sections, foundation, structural details'}
+    ],
+    'Branding & PFS Panels':[
+      {f:'Monolith/Merged/Monolith Branding and PFS Panels.pdf',d:'6 sheets — highway & urban branding views, PFS panels, thermoform panel, RDU/PDU letterings'}
     ]
   }},
   nrvi:{l:'NRVI / Branding',s:{
-    'Canopy Fascia Set 1':[
-      {f:'NRVI/Set1/CANOPY FASCIA 1-Model -2.pdf',d:'Canopy fascia Sheet 1'},
-      {f:'NRVI/Set1/CANOPY FASCIA 2 model -2.pdf',d:'Canopy fascia Sheet 2'},
-      {f:'NRVI/Set1/CANOPY FASCIA 3-Model -2.pdf',d:'Canopy fascia Sheet 3'},
-      {f:'NRVI/Set1/CANOPY FASCIA 4-Model -2.pdf',d:'Canopy fascia Sheet 4'},
-      {f:'NRVI/Set1/CANOPY FASCIA 5-Model -2.pdf',d:'Canopy fascia Sheet 5'},
-      {f:'NRVI/Set1/CANOPY FASCIA 6-Model -2.pdf',d:'Canopy fascia Sheet 6'},
-      {f:'NRVI/Set1/CANOPY FASCIA 7-Model -2.pdf',d:'Canopy fascia Sheet 7'},
-      {f:'NRVI/Set1/CANOPY FASCIA 10-Model.pdf',d:'Canopy fascia Sheet 10'},
-      {f:'NRVI/Set1/CANOPY FASCIA 11-Model.pdf',d:'Canopy fascia Sheet 11'},
-      {f:'NRVI/Set1/CANOPY FACIA 12 CORNER 12-Model.pdf',d:'Canopy fascia corner Sheet 12'},
-      {f:'NRVI/Set1/CANOPY FACIA 19 FLASHING 19-Model.pdf',d:'Canopy fascia flashing Sheet 19'},
-      {f:'NRVI/Set1/CANOPY FASCIA 13 CORNER 13-Model.pdf',d:'Canopy fascia corner Sheet 13'},
-      {f:'NRVI/Set1/CANOPY FASCIA 14 LED LIGHTING BP.RVI.CF-P14-Model.pdf',d:'Canopy fascia LED lighting Sheet 14'},
-      {f:'NRVI/Set1/CANOPY FASCIA 15-Model.pdf',d:'Canopy fascia Sheet 15'},
-      {f:'NRVI/Set1/CANOPY FASCIA 16-Model.pdf',d:'Canopy fascia Sheet 16'},
-      {f:'NRVI/Set1/CANOPY FASCIA 17-Model.pdf',d:'Canopy fascia Sheet 17'},
-      {f:'NRVI/Set1/CANOPY FASCIA 18 BPCL LETTERING 18-Model.pdf',d:'Canopy fascia BPCL lettering Sheet 18'}
+    'Canopy Fascia':[
+      {f:'NRVI/Merged/Canopy Fascia - Complete Set.pdf',d:'20 sheets — fascia profiles, corners, LED lighting, thermoform, BPCL lettering, flashing details'}
     ],
-    'Canopy Fascia Set 3':[
-      {f:'NRVI/Set3/CANOPY FASCIA LED.pdf',d:'Canopy fascia LED type'},
-      {f:'NRVI/Set3/CANOPY FASCIA thermoform bpcl (1).pdf',d:'Canopy fascia thermoform 1'},
-      {f:'NRVI/Set3/CANOPY FASCIA thermoform bpcl (2).pdf',d:'Canopy fascia thermoform 2'}
+    'Cladding':[
+      {f:'NRVI/Merged/Cladding - Complete Set.pdf',d:'13 sheets — cladding types 1–11, GI channel, curved, 5m, below 5m, vinyl finishes'}
     ],
-    'Cladding Set 2':[
-      {f:'NRVI/Set2/CLADDING 1-Model -4.pdf',d:'Cladding Sheet 1'},
-      {f:'NRVI/Set2/CLADDING 2-Model -4.pdf',d:'Cladding Sheet 2'},
-      {f:'NRVI/Set2/CLADDING 2A-Model -4.pdf',d:'Cladding Sheet 2A'},
-      {f:'NRVI/Set2/CLADDING 6-Model -4.pdf',d:'Cladding Sheet 6'},
-      {f:'NRVI/Set2/CLADDING 9-Model -4.pdf',d:'Cladding Sheet 9'},
-      {f:'NRVI/Set2/CLADDING 10-Model -4.pdf',d:'Cladding Sheet 10'},
-      {f:'NRVI/Set2/CLADDING 11-Model -4.pdf',d:'Cladding Sheet 11'},
-      {f:'NRVI/Set2/CLADDING CURVED 8-Model -4.pdf',d:'Cladding curved Sheet 8'},
-      {f:'NRVI/Set2/CLADDING GI CHANNEL 7-Model -4.pdf',d:'Cladding GI channel Sheet 7'},
-      {f:'NRVI/Set2/CLADDING-5m.pdf',d:'Cladding 5m height'},
-      {f:'NRVI/Set2/CLADDING-BELOW-5m.pdf',d:'Cladding below 5m'},
-      {f:'NRVI/Set3/CLADDING vinyl (1).pdf',d:'Cladding vinyl 1'},
-      {f:'NRVI/Set3/CLADDING vinyl (2).pdf',d:'Cladding vinyl 2'}
+    'Spreader':[
+      {f:'NRVI/Merged/Spreader - Complete Set.pdf',d:'22 sheets — spreader assembly, frames, covers, display panel, extensions, lighting, ConJoin variants'}
     ],
-    'Spreader All Sets':[
-      {f:'NRVI/Set1/SPREADER 4-Model.pdf',d:'Spreader Sheet 4'},
-      {f:'NRVI/Set1/SPAREADER 8-Model -2.pdf',d:'Spreader Sheet 8'},
-      {f:'NRVI/Set1/SPREADER 9-Model.pdf',d:'Spreader Sheet 9'},
-      {f:'NRVI/Set2/SPREADER 1-Model -3.pdf',d:'Spreader Set2 Sheet 1'},
-      {f:'NRVI/Set2/SPREADER 2-Model -3.pdf',d:'Spreader Set2 Sheet 2'},
-      {f:'NRVI/Set2/SPREADER 3-Model -3.pdf',d:'Spreader Set2 Sheet 3'},
-      {f:'NRVI/Set2/SPREADER FRAME 4-Model -3.pdf',d:'Spreader frame Sheet 4'},
-      {f:'NRVI/Set2/SPREADER FRAME 5-Model -3.pdf',d:'Spreader frame Sheet 5'},
-      {f:'NRVI/Set2/SPREADER TOP COVER 6-Model -3.pdf',d:'Spreader top cover Sheet 6'},
-      {f:'NRVI/Set2/SPREADER BOTTOM COVER 7-Model -3.pdf',d:'Spreader bottom cover Sheet 7'},
-      {f:'NRVI/Set2/SPAREADER DISPLAY PANEL 8-Model -3.pdf',d:'Spreader display panel Sheet 8'},
-      {f:'NRVI/Set3/SPREADER EXTENSION 1-Model -10.pdf',d:'Spreader extension Sheet 1'},
-      {f:'NRVI/Set3/SPREADER EXTENSION 2-Model -10.pdf',d:'Spreader extension Sheet 2'},
-      {f:'NRVI/Set3/SPREADER EXTENSION 3-Model -10.pdf',d:'Spreader extension Sheet 3'},
-      {f:'NRVI/Set3/SPREADER EXTENSION 4-Model -10.pdf',d:'Spreader extension Sheet 4'},
-      {f:'NRVI/Set3/SPREADER LIGHT.pdf',d:'Spreader light'},
-      {f:'NRVI/Set3/SPREADER LIGHT1.pdf',d:'Spreader light detail'},
-      {f:'NRVI/Set4/Spreader-ConJoin-Assly.pdf',d:'Spreader ConJoin assembly'},
-      {f:'NRVI/Set4/Spreader-ConJoin-Bottom-cover.pdf',d:'Spreader ConJoin bottom cover'},
-      {f:'NRVI/Set4/Spreader-ConJoin-Display-panel.pdf',d:'Spreader ConJoin display panel'},
-      {f:'NRVI/Set4/Spreader-ConJoin-Top-cover.pdf',d:'Spreader ConJoin top cover'},
-      {f:'NRVI/Set4/Spreader-ConJoint-Frame.pdf',d:'Spreader ConJoin frame'}
+    'Facility':[
+      {f:'NRVI/Merged/Facility - Complete Set.pdf',d:'19 sheets — assembly, foundation, structure, side panels, door, FRP cover, base plate, exploded view'}
     ],
-    'Facility Sets 1 and 2':[
-      {f:'NRVI/Set1/FACILITY (2)-Model.pdf',d:'Facility Set1 Sheet 2'},
-      {f:'NRVI/Set1/FACILITY (3)-Model.pdf',d:'Facility Set1 Sheet 3'},
-      {f:'NRVI/Set1/FACILITY-EXPLODED (1)-Model.pdf',d:'Facility exploded view'},
-      {f:'NRVI/Set2/FACILITY_1)-Model.pdf',d:'Facility Set2 Sheet 1'},
-      {f:'NRVI/Set2/FACILITY 2-Model.pdf',d:'Facility Set2 Sheet 2'},
-      {f:'NRVI/Set2/FACILITY 3-Model.pdf',d:'Facility Set2 Sheet 3'},
-      {f:'NRVI/Set2/FACILITY FOUNDATION 4-Model.pdf',d:'Facility foundation Sheet 4'},
-      {f:'NRVI/Set2/FACILITY STRUCTURE 5-Model.pdf',d:'Facility structure Sheet 5'},
-      {f:'NRVI/Set2/FACILITY SIDE PANEL 6-Model.pdf',d:'Facility side panel Sheet 6'},
-      {f:'NRVI/Set2/FACILITY SIDE PANEL 7-Model.pdf',d:'Facility side panel Sheet 7'},
-      {f:'NRVI/Set2/FACILITY 8-Model.pdf',d:'Facility Sheet 8'},
-      {f:'NRVI/Set2/FACILITY 9-Model.pdf',d:'Facility Sheet 9'},
-      {f:'NRVI/Set2/FACILITY TOP SHEET 10-Model.pdf',d:'Facility top sheet Sheet 10'},
-      {f:'NRVI/Set2/FACILITY 11-Model.pdf',d:'Facility Sheet 11'},
-      {f:'NRVI/Set2/FACILITY 12-Model.pdf',d:'Facility Sheet 12'},
-      {f:'NRVI/Set2/FACILITY DOOR 13-Model.pdf',d:'Facility door Sheet 13'},
-      {f:'NRVI/Set2/FACILITY 14-Model.pdf',d:'Facility Sheet 14'},
-      {f:'NRVI/Set2/FACILITY FRP COVER 15-Model.pdf',d:'Facility FRP cover Sheet 15'},
-      {f:'NRVI/Set2/FACILITY BASE PLATE 16-Model.pdf',d:'Facility base plate Sheet 16'}
+    'MPD, Signage & Display':[
+      {f:'NRVI/Merged/MPD Signage and Display - Complete Set.pdf',d:'20 sheets — MPD hollow/edge-lit/backlit, digital price board, poster unit, in/out signs, dealer name, BPCL lettering'}
     ],
-    'MPD and Signage':[
-      {f:'NRVI/Set4/MPD HOLLOW SPACE BP.RVI.MPD-A01-Model.pdf',d:'MPD hollow space A01'},
-      {f:'NRVI/Set4/MPD HOLLOW EDGELIT DISPLAY (REV-A)-Model.pdf',d:'MPD edge-lit display Rev-A'},
-      {f:'NRVI/Set4/MPD HOLLOW SPACE _ELELCT CONNECTION DETAIL.pdf',d:'MPD electrical connection detail'},
-      {f:'NRVI/Set4/MPD HOLLOW BACKLIT_RETROFIT RVI Electric Connections_R1.PDF',d:'MPD backlit LED retrofit — 3-way FLP junction box, 3×1.5mm² Cu armoured cable. Service nos: 7006458, 7006488, 7006543'},
-      {f:'NRVI/Set4/IN AND OUT SIGN.pdf',d:'In and Out sign'},
-      {f:'NRVI/Set4/NO SIGN 1-Model -6.pdf',d:'No sign Sheet 1'},
-      {f:'NRVI/Set4/NO SIGN 2-Model -6.pdf',d:'No sign Sheet 2'},
-      {f:'NRVI/Set4/BPCL LETTERING Bharatpetroleum Letter-FACIA.pdf',d:'BPCL lettering dimensions for Bharat Petroleum facia letters'},
-      {f:'NRVI/Set4/DEALERNAME A01-Model.pdf',d:'Dealer name sign A01'}
-    ],
-    'Poster Unit':[
-      {f:'NRVI/Set4/POSTER UNIT 1-Model.pdf',d:'Poster unit Sheet 1'},
-      {f:'NRVI/Set4/POSTER UNIT 2-Model.pdf',d:'Poster unit Sheet 2'},
-      {f:'NRVI/Set4/POSTER UNIT 3-Model.pdf',d:'Poster unit Sheet 3'},
-      {f:'NRVI/Set4/POSTER UNIT 4-Model.pdf',d:'Poster unit Sheet 4'},
-      {f:'NRVI/Set4/POSTER UNIT 5-Model.pdf',d:'Poster unit Sheet 5'},
-      {f:'NRVI/Set4/POSTER UNIT BOTTOM DOOR 6-Model.pdf',d:'Poster unit bottom door'},
-      {f:'NRVI/Set4/POSTER UNIT BP.RVI.DPU-A02.pdf',d:'Poster unit DPU A02'},
-      {f:'NRVI/Set4/POSTER UNIT BP.RVI.DPU.A01-Model.pdf',d:'Poster unit DPU A01'},
-      {f:'NRVI/Set4/POSTER UNIT assly-with -graphic (1)-Model.pdf',d:'Poster unit assembly with graphic'}
-    ],
-    'Digital Price Board':[
-      {f:'NRVI/Set4/DIGITAL STOCK BOARD SPECS.pdf',d:'Digital price board specs — IP65, 6000 cd/m², 1200×750×75mm, 3072 LEDs minimum, smartphone controlled'},
-      {f:'NRVI/Set4/DIGITAL STOCK BOARD Artwork BPCL Wifi Automation LPDB.pdf',d:'Price board artwork — Petrol and Diesel digits 200×160mm, SMS price check format'}
-    ],
-    'Emblem Wall Mounted':[
-      {f:'NRVI/Set3/EMBLEM WALL MOUNTED 1of7.pdf',d:'Wall mounted emblem Sheet 1'},
-      {f:'NRVI/Set3/EMBLEM WALL MOUNTED 2of7.pdf',d:'Wall mounted emblem Sheet 2'},
-      {f:'NRVI/Set3/EMBLEM WALL MOUNTED 3of7.pdf',d:'Wall mounted emblem Sheet 3'},
-      {f:'NRVI/Set3/EMBLEM WALL MOUNTED 4of7.pdf',d:'Wall mounted emblem Sheet 4'},
-      {f:'NRVI/Set3/EMBLEM WALL MOUNTED 5of7.pdf',d:'Wall mounted emblem Sheet 5'},
-      {f:'NRVI/Set3/EMBLEM WALL MOUNTED 6of7.pdf',d:'Wall mounted emblem Sheet 6'},
-      {f:'NRVI/Set3/EMBLEM WALL MOUNTED 7of7.pdf',d:'Wall mounted emblem Sheet 7'}
-    ],
-    'LDU and QOC':[
-      {f:'NRVI/LDU/LDU_Final  Lit  Drawing.pdf',d:'LDU Lube Display Unit — lit version final drawing'},
-      {f:'NRVI/LDU/LDU_Final Non Lit  (1).pdf',d:'LDU — non-lit version final drawing'},
-      {f:'NRVI/QOC/QOC drawing.pdf',d:'QOC structure — 8×8ft, 7ft 4in height, 1×1 inch hollow pipe 1mm, trapezoidal sheet, PCC 1:2:4 foundation'},
-      {f:'NRVI/QOC/QOC Logo Specifications.pdf',d:'QOC logo on fascia — FRP moulded with graphic pasted'}
-    ],
-    'Monolith Set 3':[
-      {f:'NRVI/Set3/MONOLITH HIGHWAY.pdf',d:'Monolith highway Set 3'},
-      {f:'NRVI/Set3/MONOLITH HIGHWAY-PFS-PANEL.pdf',d:'Monolith highway PFS panel'},
-      {f:'NRVI/Set3/MONOLITH URBAN-MONOLITH.pdf',d:'Monolith urban'},
-      {f:'NRVI/Set3/MONOLITH URBAN-PFS-PANEL.pdf',d:'Monolith urban PFS panel'},
-      {f:'NRVI/Set3/MONOLITH therfmoform-PFS-PANEL.pdf',d:'Monolith thermoform PFS panel'},
-      {f:'NRVI/Set3/MONOLITH RDU-PDU letterrings final 5 2018.pdf',d:'Monolith RDU/PDU letterings 2018'}
-    ],
-    'Other Branding':[
-      {f:'NRVI/Set1/AIRBOY CANOPY 1-Model.pdf',d:'Airboy canopy'},
-      {f:'NRVI/Set1/AIRGAUGE HOUSING.pdf',d:'Airgauge housing'},
-      {f:'NRVI/Set1/ARCHES STRUCTURE 3-Model -1.pdf',d:'Arches structure'},
-      {f:'NRVI/Set1/Additional Blue wave lighting.pdf',d:'Additional blue wave lighting'},
-      {f:'NRVI/Set1/BANNER FLOOR MOUNTED.pdf',d:'Banner floor mounted'},
-      {f:'NRVI/Set1/BUILDING FASCIA BP.RV.SF.A01-Model.pdf',d:'Building fascia A01'},
-      {f:'NRVI/Set4/BANNER STAND POLE MOUNTED 1-Model -8.pdf',d:'Banner stand pole mounted'},
-      {f:'NRVI/Set4/ISLAND-COUNTER-UNIT.PDF',d:'Island counter unit'},
-      {f:'NRVI/Set4/PEDESTAL-GUARD(REV.A)-Model.pdf',d:'Pedestal guard Rev-A'},
-      {f:'NRVI/Set3/PME-A01-Model.pdf',d:'PME A01'},
-      {f:'NRVI/Set3/PME-A02-Model.pdf',d:'PME A02'},
-      {f:'NRVI/Set3/PME-A03-Model.pdf',d:'PME A03'}
+    'Emblem, LDU & Accessories':[
+      {f:'NRVI/Merged/Emblem LDU and Accessories - Complete Set.pdf',d:'20 sheets — wall emblem (7 sheets), LDU lit & non-lit, QOC, airboy, airgauge, arches, banners, building fascia, island counter, pedestal guard'}
     ]
   }},
   pme:{l:'Pole Mounted Emblem',s:{
-    'Assembly':[
-      {f:'PME/PM-A01-Model.pdf',d:'PME assembly Sheet A01'},
-      {f:'PME/PM-A02-Model.pdf',d:'PME assembly Sheet A02'},
-      {f:'PME/PM-A03-Model.pdf',d:'PME assembly Sheet A03'},
-      {f:'PME/A05-Model.pdf',d:'PME Sheet A05'},
-      {f:'PME/A06-Model.pdf',d:'PME Sheet A06'}
-    ],
-    'Component Sheets':[
-      {f:'PME/4-Model.pdf',d:'PME pedestal reinforcement — M20 concrete, Fe500 TOR steel, 50mm cover, 8mm at 200mm c/c distribution'},
-      {f:'PME/P07-Model.pdf',d:'PME component P07'},
-      {f:'PME/P08-Model.pdf',d:'PME component P08'},
-      {f:'PME/P09-Model.pdf',d:'PME component P09'},
-      {f:'PME/P10-Model.pdf',d:'PME component P10'},
-      {f:'PME/P11-Model.pdf',d:'PME component P11'},
-      {f:'PME/P12-Model.pdf',d:'PME component P12'},
-      {f:'PME/P13-Model.pdf',d:'PME component P13'}
-    ],
     'Foundation':[
-      {f:'PME/EMBLEM POLE FONUNDATION.pdf',d:'PME foundation — 1100×900×700mm, 2×ISMC 150 pillars, 4×25mm dia anchor bolts 500mm long, M200 RCC, wind 250 kg, SBC 4.07 t/m²'}
+      {f:'PME/EMBLEM POLE FONUNDATION.pdf',d:'Foundation — 1100×900×700mm, 2×ISMC 150 pillars, 4×25mm anchor bolts 500mm long, M200 RCC, wind 250 kg, SBC 4.07 t/m²'}
+    ],
+    'Assembly & Components':[
+      {f:'PME/Merged/PME - Assembly and Components.pdf',d:'13 sheets — assembly A01–A06, pedestal reinforcement, component sheets P07–P13'}
     ]
   }},
   approved:{l:'Approved Makes',s:{}} /* handled separately */
@@ -1206,7 +1125,7 @@ function openPreview(u, title){
   document.getElementById('preview-title').textContent = title;
   var dlEl = document.getElementById('preview-dl');
   dlEl.href = u;
-  dlEl.download = u.split('/').pop();
+  dlEl.download = decodeURIComponent(u.split('/').pop());
 
   var modal   = document.getElementById('preview-modal');
   var wrap    = document.getElementById('preview-iframe-wrap');
@@ -1216,14 +1135,14 @@ function openPreview(u, title){
 
   document.body.style.overflow = 'hidden';
   modal.classList.add('open');
-  wrap.style.display = 'flex';
+  wrap.style.display  = 'flex';
   mfall.style.display = 'none';
   loading.style.display = 'flex';
   iframe.src = '';
 
-  /* Use Google Docs Viewer — works reliably on ALL devices incl iOS */
-  var viewerUrl = 'https://docs.google.com/viewer?url=' + encodeURIComponent(u) + '&embedded=true';
-  setTimeout(function(){ iframe.src = viewerUrl; }, 120);
+  /* Direct URL — browser renders PDF natively (Chrome/Firefox/Edge/Safari 16+).
+     No third-party viewer needed; works offline once cached. */
+  setTimeout(function(){ iframe.src = u + '#toolbar=1&view=FitH'; }, 120);
 }
 
 function iframeLoaded(){
@@ -1301,9 +1220,171 @@ function closeIosSheet(e){
 }
 
 /* ═══════════════════════════════════════════════════════════
+   OFFLINE — Download all PDFs to Cache Storage
+   ═══════════════════════════════════════════════════════════ */
+var PDF_CACHE    = 'bpcl-pdfs-v1';
+var dlCancelled  = false;
+var dlRunning    = false;
+
+/* Build flat list of every PDF URL */
+function getAllPdfUrls(){
+  var urls = [];
+  Object.keys(D).forEach(function(cat){
+    if(cat === 'approved') return;
+    Object.keys(D[cat].s).forEach(function(sub){
+      D[cat].s[sub].forEach(function(item){
+        urls.push(purl(item.f));
+      });
+    });
+  });
+  /* add the approved makes PDF */
+  urls.push(purl('Approved Makes/Annexure-D9 - Approved Make of Materials.pdf'));
+  return urls;
+}
+
+/* Show one state, hide the rest */
+function setOcState(state){
+  ['idle','downloading','done','partial'].forEach(function(s){
+    var el = document.getElementById('oc-'+s);
+    if(el) el.className = el.className.replace(' active','');
+    if(s === state && el) el.className += ' active';
+  });
+  var pw = document.getElementById('oc-prog-wrap');
+  if(pw) pw.style.display = (state === 'downloading') ? 'block' : 'none';
+}
+
+/* Check what's already cached and set the right card state */
+function checkOfflineStatus(){
+  if(!('caches' in window)){ document.getElementById('offline-card').style.display='none'; return; }
+  var urls = getAllPdfUrls();
+  var total = urls.length;
+  caches.open(PDF_CACHE).then(function(cache){
+    /* Sample a few URLs to estimate coverage */
+    var checks = urls.map(function(u){ return cache.match(u).then(function(r){ return !!r; }); });
+    Promise.all(checks).then(function(results){
+      var cached = results.filter(Boolean).length;
+      document.getElementById('oc-idle-sub').textContent =
+        total + ' drawings · ~68 MB · Works without internet';
+      if(cached === 0){
+        setOcState('idle');
+      } else if(cached >= total){
+        var info = localStorage.getItem('oc-sync-date') || '';
+        document.getElementById('oc-done-sub').textContent =
+          cached + ' drawings cached' + (info ? ' · Synced '+info : '');
+        setOcState('done');
+      } else {
+        document.getElementById('oc-partial-sub').textContent =
+          cached + ' of ' + total + ' drawings cached';
+        setOcState('partial');
+      }
+    });
+  }).catch(function(){ setOcState('idle'); });
+}
+
+/* Start / Retry download */
+function startDownload(forceAll){
+  if(dlRunning) return;
+  if(!('caches' in window)){ alert('Your browser does not support offline caching.'); return; }
+  dlCancelled = false;
+  dlRunning   = true;
+  setOcState('downloading');
+
+  var allUrls  = getAllPdfUrls();
+  var total    = allUrls.length;
+  var done     = 0;
+  var failed   = 0;
+
+  document.getElementById('oc-dl-sub').textContent = '0 / ' + total + ' files';
+  document.getElementById('oc-prog-count').textContent = '0 / ' + total;
+  document.getElementById('oc-prog-bar').style.width = '0%';
+  document.getElementById('oc-prog-wrap').style.display = 'block';
+
+  caches.open(PDF_CACHE).then(function(cache){
+
+    /* Filter to only un-cached if not forcing refresh */
+    var toFetch = allUrls;
+    if(!forceAll){
+      toFetch = [];
+      var checkPromises = allUrls.map(function(u){
+        return cache.match(u).then(function(r){ if(!r) toFetch.push(u); });
+      });
+      Promise.all(checkPromises).then(function(){ fetchBatch(cache, toFetch, 0, total, done, failed, allUrls.length); });
+    } else {
+      fetchBatch(cache, toFetch, 0, total, done, failed, allUrls.length);
+    }
+  });
+}
+
+function fetchBatch(cache, urls, idx, grandTotal, done, failed, cacheTotal){
+  if(dlCancelled || idx >= urls.length){
+    dlRunning = false;
+    if(!dlCancelled){
+      /* Done */
+      var total = done + failed + (grandTotal - urls.length); /* already cached + newly fetched */
+      var now   = new Date();
+      var dateStr = now.toLocaleDateString('en-IN',{day:'numeric',month:'short'}) +
+                    ' ' + now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+      localStorage.setItem('oc-sync-date', dateStr);
+      if(failed === 0){
+        document.getElementById('oc-done-sub').textContent =
+          cacheTotal + ' drawings cached · Synced ' + dateStr;
+        setOcState('done');
+      } else {
+        document.getElementById('oc-partial-sub').textContent =
+          (done) + ' downloaded · ' + failed + ' failed';
+        setOcState('partial');
+      }
+    } else {
+      checkOfflineStatus();
+    }
+    return;
+  }
+
+  /* Fetch up to 4 concurrently */
+  var BATCH = 4;
+  var slice = urls.slice(idx, idx + BATCH);
+  var promises = slice.map(function(u){
+    /* Show current filename */
+    var fname = decodeURIComponent(u.split('/').pop());
+    document.getElementById('oc-prog-file').textContent = fname;
+
+    return fetch(u, {cache:'no-store'}).then(function(resp){
+      if(resp.ok){ cache.put(u, resp); done++; }
+      else { failed++; }
+    }).catch(function(){ failed++; });
+  });
+
+  Promise.all(promises).then(function(){
+    var total = urls.length;
+    var sofar = idx + slice.length;
+    var pct   = Math.round((sofar / total) * 100);
+    document.getElementById('oc-prog-bar').style.width = pct + '%';
+    document.getElementById('oc-prog-count').textContent = sofar + ' / ' + total;
+    document.getElementById('oc-dl-sub').textContent = sofar + ' / ' + total + ' files';
+    fetchBatch(cache, urls, idx + BATCH, grandTotal, done, failed, cacheTotal);
+  });
+}
+
+function cancelDownload(){
+  dlCancelled = true;
+  dlRunning   = false;
+  setOcState('idle');
+  document.getElementById('oc-prog-wrap').style.display = 'none';
+}
+
+function clearOfflineCache(){
+  if(!confirm('Remove all offline drawings? You can re-download anytime.')) return;
+  caches.delete(PDF_CACHE).then(function(){
+    localStorage.removeItem('oc-sync-date');
+    setOcState('idle');
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
    INIT — set chip state
    ═══════════════════════════════════════════════════════════ */
 syncChip('all');
+checkOfflineStatus();
 </script>
 </body>
 </html>
