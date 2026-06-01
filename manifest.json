@@ -2,8 +2,8 @@
   "name": "BPCL Standard Drawings",
   "short_name": "BPCL Drawings",
   "description": "BPCL PMC Standard Drawings Reference Library — Civil, Tanks, Electrical, NRVI, HME, Monolith and more",
-  "start_url": "./std-drawings-standalone.html",
-  "scope": "./",
+  "start_url": "/BPCL_Standard_Drawings/prototype/std-drawings-standalone.html",
+  "scope": "/BPCL_Standard_Drawings/prototype/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#0f1623",
@@ -11,13 +11,13 @@
   "categories": ["utilities", "productivity"],
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "/BPCL_Standard_Drawings/prototype/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "/BPCL_Standard_Drawings/prototype/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
