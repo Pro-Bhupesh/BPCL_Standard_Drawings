@@ -4,6 +4,15 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
 <title>BPCL Standard Drawings</title>
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BPCL Drawings">
+<meta name="theme-color" content="#0f1623">
+<link rel="apple-touch-icon" href="icon-192.png">
+<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
@@ -228,10 +237,75 @@ body{
 #preview-mobile-fallback p{font-size:13px;line-height:1.5;max-width:280px}
 #preview-open-ext,.preview-open-btn{display:inline-flex;align-items:center;gap:6px;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:"IBM Plex Sans",sans-serif}
 
+/* ── PWA INSTALL BANNER ── */
+#install-banner{
+  background:linear-gradient(135deg,#0f1623,#1a2744);
+  border-bottom:1px solid rgba(30,150,247,.25);
+  padding:10px 16px;display:none;align-items:center;gap:10px;flex-shrink:0;
+  animation:slideDown .3s ease;
+}
+#install-banner.show{display:flex}
+@keyframes slideDown{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
+.ib-icon{width:36px;height:36px;border-radius:10px;background:#1565C0;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+.ib-icon::after{content:'';width:12px;height:12px;border-radius:50%;background:var(--yellow);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+.ib-text{flex:1;min-width:0}
+.ib-title{font-size:12px;font-weight:700;color:#fff}
+.ib-sub{font-size:10px;color:rgba(255,255,255,.5);margin-top:1px}
+#ib-install{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:"IBM Plex Sans",sans-serif;white-space:nowrap;flex-shrink:0}
+#ib-dismiss{width:28px;height:28px;border:none;background:rgba(255,255,255,.08);border-radius:6px;color:rgba(255,255,255,.4);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+#ib-dismiss .material-icons{font-size:16px}
+
+/* iOS install instruction sheet */
+#ios-sheet{
+  position:fixed;inset:0;z-index:1000;
+  display:none;align-items:flex-end;
+  background:rgba(0,0,0,.6);animation:fadeIn .2s ease;
+}
+#ios-sheet.open{display:flex}
+#ios-content{
+  background:#1e293b;width:100%;border-radius:20px 20px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom));
+}
+.ios-handle{width:36px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin:0 auto 16px}
+.ios-title{font-size:15px;font-weight:700;color:#fff;text-align:center;margin-bottom:4px}
+.ios-sub{font-size:12px;color:rgba(255,255,255,.5);text-align:center;margin-bottom:20px}
+.ios-steps{list-style:none;display:flex;flex-direction:column;gap:12px}
+.ios-steps li{display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,.8)}
+.ios-step-num{width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ios-step-icon{background:rgba(255,255,255,.1);border-radius:8px;padding:4px 8px;font-size:11px;font-weight:600;color:#fff;display:inline-flex;align-items:center;gap:4px;margin-left:4px}
+.ios-step-icon .material-icons{font-size:14px}
+#ios-close{width:100%;margin-top:20px;background:rgba(255,255,255,.08);border:none;border-radius:10px;padding:13px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:"IBM Plex Sans",sans-serif}
+
 .hidden{display:none!important}
 </style>
 </head>
 <body>
+
+<!-- PWA INSTALL BANNER -->
+<div id="install-banner">
+  <div class="ib-icon"></div>
+  <div class="ib-text">
+    <div class="ib-title">Install BPCL Drawings</div>
+    <div class="ib-sub">Works offline · Opens like a native app</div>
+  </div>
+  <button id="ib-install" onclick="triggerInstall()">Install</button>
+  <button id="ib-dismiss" onclick="dismissBanner()"><span class="material-icons">close</span></button>
+</div>
+
+<!-- iOS ADD TO HOME SHEET -->
+<div id="ios-sheet" onclick="closeIosSheet(event)">
+  <div id="ios-content">
+    <div class="ios-handle"></div>
+    <div class="ios-title">Add to Home Screen</div>
+    <div class="ios-sub">Install this app for quick access from your home screen</div>
+    <ol class="ios-steps">
+      <li><div class="ios-step-num">1</div>Tap the <span class="ios-step-icon"><span class="material-icons">ios_share</span>Share</span> button in Safari's toolbar</li>
+      <li><div class="ios-step-num">2</div>Scroll down and tap <span class="ios-step-icon"><span class="material-icons">add_box</span>Add to Home Screen</span></li>
+      <li><div class="ios-step-num">3</div>Tap <strong style="color:#fff">Add</strong> in the top right corner</li>
+    </ol>
+    <button id="ios-close" onclick="closeIosSheet()">Got it</button>
+  </div>
+</div>
 
 <!-- TOP BAR -->
 <div id="topbar">
@@ -1134,29 +1208,22 @@ function openPreview(u, title){
   dlEl.href = u;
   dlEl.download = u.split('/').pop();
 
-  var modal = document.getElementById('preview-modal');
-  var wrap  = document.getElementById('preview-iframe-wrap');
-  var mfall = document.getElementById('preview-mobile-fallback');
+  var modal   = document.getElementById('preview-modal');
+  var wrap    = document.getElementById('preview-iframe-wrap');
+  var mfall   = document.getElementById('preview-mobile-fallback');
   var loading = document.getElementById('preview-loading');
   var iframe  = document.getElementById('preview-iframe');
 
-  /* Show modal */
   document.body.style.overflow = 'hidden';
   modal.classList.add('open');
+  wrap.style.display = 'flex';
+  mfall.style.display = 'none';
+  loading.style.display = 'flex';
+  iframe.src = '';
 
-  if(isMobile){
-    /* On mobile — show fallback with open button */
-    wrap.style.display = 'none';
-    mfall.style.display = 'flex';
-    document.getElementById('preview-open-ext').onclick = function(){ window.open(u,'_blank'); };
-  } else {
-    wrap.style.display = 'flex';
-    mfall.style.display = 'none';
-    loading.style.display = 'flex';
-    iframe.src = '';
-    /* small delay so modal animation completes first */
-    setTimeout(function(){ iframe.src = u; }, 100);
-  }
+  /* Use Google Docs Viewer — works reliably on ALL devices incl iOS */
+  var viewerUrl = 'https://docs.google.com/viewer?url=' + encodeURIComponent(u) + '&embedded=true';
+  setTimeout(function(){ iframe.src = viewerUrl; }, 120);
 }
 
 function iframeLoaded(){
@@ -1179,6 +1246,59 @@ function closePreview(){
 document.addEventListener('keydown', function(e){
   if(e.key==='Escape') closePreview();
 });
+
+/* ═══════════════════════════════════════════════════════════
+   PWA — Service Worker + Install Prompt
+   ═══════════════════════════════════════════════════════════ */
+var deferredInstallPrompt = null;
+var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+var isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+/* Register service worker */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
+}
+
+/* Android/Chrome install prompt */
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  if(!isInStandaloneMode && !sessionStorage.getItem('ib-dismissed')){
+    document.getElementById('install-banner').classList.add('show');
+  }
+});
+
+/* iOS — show banner if not already installed and not dismissed */
+if(isIOS && !isInStandaloneMode && !sessionStorage.getItem('ib-dismissed')){
+  document.getElementById('install-banner').classList.add('show');
+}
+
+/* Hide banner once installed */
+window.addEventListener('appinstalled', function(){
+  dismissBanner();
+});
+
+function triggerInstall(){
+  if(deferredInstallPrompt){
+    deferredInstallPrompt.prompt();
+    deferredInstallPrompt.userChoice.then(function(){ dismissBanner(); });
+  } else if(isIOS){
+    document.getElementById('ios-sheet').classList.add('open');
+  }
+}
+
+function dismissBanner(){
+  document.getElementById('install-banner').classList.remove('show');
+  sessionStorage.setItem('ib-dismissed','1');
+}
+
+function closeIosSheet(e){
+  if(!e || e.target===document.getElementById('ios-sheet')){
+    document.getElementById('ios-sheet').classList.remove('open');
+  }
+}
 
 /* ═══════════════════════════════════════════════════════════
    INIT — set chip state
