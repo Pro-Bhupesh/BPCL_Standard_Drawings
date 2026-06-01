@@ -1,10 +1,11 @@
 /* BPCL Standard Drawings — Service Worker v1 */
-var CACHE = 'bpcl-drawings-v1';
+var CACHE = 'bpcl-drawings-v2';
+var BASE = '/BPCL_Standard_Drawings/prototype/';
 var SHELL = [
-  './std-drawings-standalone.html',
-  './manifest.json',
-  './icon-192.png',
-  './icon-512.png',
+  BASE + 'std-drawings-standalone.html',
+  BASE + 'manifest.json',
+  BASE + 'icon-192.png',
+  BASE + 'icon-512.png',
   'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap',
   'https://fonts.googleapis.com/icon?family=Material+Icons'
 ];
@@ -51,7 +52,7 @@ self.addEventListener('fetch', function(e){
         return response;
       }).catch(function(){
         /* Offline fallback for navigation */
-        if(e.request.mode==='navigate') return caches.match('./std-drawings-standalone.html');
+        if(e.request.mode==='navigate') return caches.match(BASE+'std-drawings-standalone.html');
       });
     })
   );
